@@ -4,5 +4,5 @@ using UnityEngine;
 
 interface IEntity
 {
-    public void Hide(Transform spot);
+    public void Hide(HidingSpot spot);
 }

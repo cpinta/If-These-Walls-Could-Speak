@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 
 
@@ -13,6 +14,7 @@ public class PlayerController : Entity
     [SerializeField] Camera cam;
     InputAction action;
     public TMP_Text centerText;
+    [SerializeField] Light flashlight;
 
     Vector2 movementVector = Vector2.zero;
     //Camera Variables
@@ -21,7 +23,8 @@ public class PlayerController : Entity
     float cameraPitch = 0.0f;
     Vector2 currentMouseDelta = Vector2.zero;
     Vector2 currentMouseDeltaVelocity = Vector2.zero;
-
+    [SerializeField] int hidingFreeCameraAngle = 15;
+    bool camWasMovedLastUpdate = false;
     float baseCamHeight = 0.6f;
 
     //Player Variables
@@ -52,41 +55,76 @@ public class PlayerController : Entity
         GetComponent<MeshRenderer>().enabled = false;
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
 
-        controlState = ControlState.FullControl;
         customHide = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(isHiding)
+        if (hidingSpot != null)
         {
-            if (hidingStatus == HidingStatus.Entering)
+            if (isHiding)
             {
-                if (Vector3.Distance(transform.position, hidingSpot.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)))) > GameManager.I.distanceToDestination)
+                if (hidingState == HidingState.Entering)
                 {
-                    transform.position = Vector3.Lerp(transform.position, hidingSpot.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y))), hideLerp);
-                    transform.rotation = Quaternion.Lerp(transform.rotation, hidingSpot.rotation, hideLerp);
+                    Vector3 vec = hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)));
+                    float distance = Vector3.Distance(transform.position, hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y))));
+                    if (distance > GameManager.I.distanceToDestination)
+                    {
+                        transform.position = Vector3.Lerp(transform.position, hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y))), hideLerp * Time.deltaTime);
+
+                        if (hidingSpot.syncRotation)
+                        {
+                            if (Quaternion.Angle(transform.rotation, hidingSpot.location.rotation)! > hidingFreeCameraAngle && camWasMovedLastUpdate)
+                            {
+                                canMoveCamera = true;
+                            }
+                            if (!canMoveCamera)
+                            {
+                                transform.rotation = Quaternion.Lerp(transform.rotation, hidingSpot.location.rotation, hideLerp * Time.deltaTime);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        transform.position = hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)));
+                        hidingState = HidingState.In;
+                        canMoveCamera = true;
+                    }
                 }
-            }
-            else
-            {
-                if (Vector3.Distance(transform.position, hidingSpot.position) > GameManager.I.distanceToDestination)
+                else if (hidingState == HidingState.Exiting)
                 {
-                    transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp);
-                    //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, hidingSpot.rotation, hideLerp);
+                    {
+                        if (Vector3.Distance(transform.position, preHidePosition) > GameManager.I.distanceToDestination)
+                        {
+                            transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp * Time.deltaTime);
+                            //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, hidingSpot.rotation, hideLerp);
+                        }
+                        else
+                        {
+                            UnHide();
+                        }
+                    }
                 }
                 else
                 {
-                    UnHide();
+                    if (movementVector != Vector2.zero)
+                    {
+                        hidingState = HidingState.Exiting;
+                    }
                 }
             }
         }
-
-        if((controlState == ControlState.CantInteract || controlState == ControlState.FullControl) && !isHiding)
+        else
         {
-            Vector2 targetMouseDelta = Mouse.current.delta.ReadValue() * Time.smoothDeltaTime;
-            currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
+            isHiding = false;
+        }
+
+        Vector2 targetMouseDelta = Mouse.current.delta.ReadValue() * Time.smoothDeltaTime;
+        currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
+        camWasMovedLastUpdate = currentMouseDelta != Vector2.zero;
+        if (canMoveCamera)
+        {
             cameraPitch -= currentMouseDelta.y * mouseSensitivity;
             cameraPitch = Mathf.Clamp(cameraPitch, -90.0f, 90.0f);
             cam.transform.localEulerAngles = Vector3.right * cameraPitch;
@@ -95,28 +133,39 @@ public class PlayerController : Entity
             Vector3 cameraForward = movementVector.y * transform.forward;
             Vector3 cameraRight = movementVector.x * transform.right;
 
-            currentSpeed = playerSpeed;
-            if (isCrouching)
+            if (canMoveBody)
             {
-                currentSpeed *= playerCrouchMovementMultiplier;
-                col.height = Mathf.Lerp(col.height, crouchedPlayerHeight * 2, playerCrouchLerp);
+                currentSpeed = playerSpeed;
+                if (isCrouching)
+                {
+                    currentSpeed *= playerCrouchMovementMultiplier;
+                    col.height = Mathf.Lerp(col.height, crouchedPlayerHeight * 2, playerCrouchLerp);
+                }
+                else
+                {
+                    CrouchRaycast();
+                }
+
+                if (isJaunting)
+                {
+                    currentSpeed *= playerJauntMovementMultiplier;
+                }
             }
             else
             {
-                CrouchRaycast();
+                currentSpeed = 0;
             }
 
-            if (isJaunting)
+            if (!rb.isKinematic)
             {
-                currentSpeed *= playerJauntMovementMultiplier;
+                rb.velocity = ((cameraForward + cameraRight).normalized * currentSpeed) + (Vector3.up * rb.velocity.y);
             }
-            rb.velocity = ((cameraForward + cameraRight).normalized * currentSpeed) + (Vector3.up * rb.velocity.y);
         }
 
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
         cam.transform.localPosition = Vector3.up * baseCamHeight * (col.height / (basePlayerHeight * 2));
 
-        if(controlState == ControlState.CantMove || controlState == ControlState.FullControl)
+        if (canInteract)
         {
             InteractRaycast();
         }
@@ -127,10 +176,10 @@ public class PlayerController : Entity
         Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, interactDistance);
         if (hit.collider != null)
         {
-            if(hit.collider.tag == "Interactable")
+            if (hit.collider.tag == "Interactable")
             {
                 Debug.DrawRay(cam.transform.position, cam.transform.position + (cam.transform.forward * interactDistance), Color.green);
-                if(hit.collider.gameObject.TryGetComponent<Interactable>(out Interactable interactable))
+                if (hit.collider.gameObject.TryGetComponent<Interactable>(out Interactable interactable))
                 {
                     currentInteractable = interactable;
                     if (interactable.interactText != null && interactable.interactText != "")
@@ -184,15 +233,18 @@ public class PlayerController : Entity
         }
     }
 
-    public override void Hide(Transform spot)
+    public override void Hide(HidingSpot spot)
     {
         base.Hide(spot);
+        rb.isKinematic = true;
+        col.enabled = false;
     }
 
-    void UnHide()
+    public override void UnHide()
     {
-        isHiding = false;
-        controlState = ControlState.FullControl;
+        base.UnHide();
+        rb.isKinematic = false;
+        col.enabled = true;
     }
 
     #region Input Handling Methods
@@ -201,19 +253,19 @@ public class PlayerController : Entity
         movementVector = context.ReadValue<Vector2>();
     }
 
-    public void Interact(InputAction.CallbackContext context) 
+    public void Interact(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             Debug.Log("Interact");
-            if(currentInteractable != null)
+            if (currentInteractable != null)
             {
                 currentInteractable.Interact(this);
             }
         }
     }
 
-    public void UseItem(InputAction.CallbackContext context) 
+    public void UseItem(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -226,7 +278,7 @@ public class PlayerController : Entity
         if (context.performed)
         {
             isCrouching = true;
-            if(isJaunting)
+            if (isJaunting)
             {
                 isJaunting = false;
             }
@@ -252,5 +304,35 @@ public class PlayerController : Entity
             isJaunting = false;
         }
     }
+
+    public void ToggleFlashlight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            FlashlightToggle();
+        }
+    }
     #endregion
+
+    public void FlashlightToggle()
+    {
+        if(flashlight.enabled)
+        {
+            flashlight.enabled = false;
+        }
+        else
+        {
+            flashlight.enabled = true;
+        }
+    }
+
+    public void FlashlightOn()
+    {
+        flashlight.enabled = true;
+    }
+
+    public void FlashlightOff()
+    {
+        flashlight.enabled = false;
+    }
 }

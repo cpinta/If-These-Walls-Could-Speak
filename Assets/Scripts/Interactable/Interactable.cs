@@ -11,7 +11,10 @@ public abstract class Interactable : MonoBehaviour, I_Interactable
     protected void Start()
     {
         gameObject.tag = "Interactable";
-        col = GetComponent<Collider>();
+        if(col == null)
+        {
+            col = GetComponent<Collider>();
+        }
     }
 
     public abstract void Interact(Entity entity);

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class HidingSpot : Interactable
 {
-    [SerializeField] Transform location;
+    [SerializeField] public Transform location;
+    public bool usedToHide = false;
+    public bool syncRotation = false;
 
 
     // Start is called before the first frame update
@@ -27,6 +29,14 @@ public class HidingSpot : Interactable
     public void Hide(Entity entity)
     {
         Debug.Log("Hiding: "+name);
-        entity.Hide(location);
+        usedToHide = true;
+        col.enabled = false;
+        entity.Hide(this);
+    }
+
+    public void UnHide()
+    {
+        usedToHide = false;
+        col.enabled = true;
     }
 }

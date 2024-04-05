@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     }
     private static GameManager instance;
 
-    public float distanceToDestination = 0.01f;
+    public float distanceToDestination = 0.25f;
 
     void Awake()
     {

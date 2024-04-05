@@ -71,6 +71,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Toggle Flashlight"",
+                    ""type"": ""Button"",
+                    ""id"": ""27a149b5-6ca0-4c03-b3b1-9499018c7121"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Jaunt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2dae7155-4f8a-491d-9b79-840ac6a91780"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Toggle Flashlight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -202,6 +222,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_UseItem = m_Player.FindAction("Use Item", throwIfNotFound: true);
         m_Player_Crouch = m_Player.FindAction("Crouch", throwIfNotFound: true);
         m_Player_Jaunt = m_Player.FindAction("Jaunt", throwIfNotFound: true);
+        m_Player_ToggleFlashlight = m_Player.FindAction("Toggle Flashlight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -268,6 +289,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_UseItem;
     private readonly InputAction m_Player_Crouch;
     private readonly InputAction m_Player_Jaunt;
+    private readonly InputAction m_Player_ToggleFlashlight;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -277,6 +299,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @UseItem => m_Wrapper.m_Player_UseItem;
         public InputAction @Crouch => m_Wrapper.m_Player_Crouch;
         public InputAction @Jaunt => m_Wrapper.m_Player_Jaunt;
+        public InputAction @ToggleFlashlight => m_Wrapper.m_Player_ToggleFlashlight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -301,6 +324,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jaunt.started += instance.OnJaunt;
             @Jaunt.performed += instance.OnJaunt;
             @Jaunt.canceled += instance.OnJaunt;
+            @ToggleFlashlight.started += instance.OnToggleFlashlight;
+            @ToggleFlashlight.performed += instance.OnToggleFlashlight;
+            @ToggleFlashlight.canceled += instance.OnToggleFlashlight;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -320,6 +346,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Jaunt.started -= instance.OnJaunt;
             @Jaunt.performed -= instance.OnJaunt;
             @Jaunt.canceled -= instance.OnJaunt;
+            @ToggleFlashlight.started -= instance.OnToggleFlashlight;
+            @ToggleFlashlight.performed -= instance.OnToggleFlashlight;
+            @ToggleFlashlight.canceled -= instance.OnToggleFlashlight;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -353,5 +382,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnUseItem(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJaunt(InputAction.CallbackContext context);
+        void OnToggleFlashlight(InputAction.CallbackContext context);
     }
 }
