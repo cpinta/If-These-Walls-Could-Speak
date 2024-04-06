@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum HidingState
 {
@@ -22,6 +23,11 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected bool canInteract = true;
     [SerializeField] protected float hideLerp = 6f;
     protected bool customHide = false;
+    protected float viewRadius = 10;
+    protected float viewAngle = 90;
+    protected int targetMask = 0;
+    protected int obstructionMask = 0;
+    protected bool canSeeTarget = false;
 
     void Update()
     {
@@ -75,5 +81,38 @@ public abstract class Entity : MonoBehaviour, IEntity
         isHiding = false;
         canMoveBody = true;
         canInteract = true;
+    }
+
+    protected virtual Entity FieldOfViewCheck()
+    {
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, viewRadius, LayerMask.GetMask("Entity"));
+
+        if (rangeChecks.Length != 0)
+        {
+            Entity entity = rangeChecks[0].GetComponent<Entity>();
+            if(entity.isHiding)
+            {
+                return null;
+            }
+
+            Transform target = rangeChecks[0].transform;
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+
+            if (Vector3.Angle(transform.forward, directionToTarget) < viewAngle / 2)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                    return entity;
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
