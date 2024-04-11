@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
 
     public float distanceToDestination = 0.25f;
+    public bool debug = true;
 
     void Awake()
     {

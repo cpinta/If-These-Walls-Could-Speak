@@ -18,7 +18,7 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected HidingSpot hidingSpot;
     protected HidingState hidingState;
     protected Vector3 preHidePosition;
-    protected Transform hand;
+    public Transform hand;
     protected bool canMoveBody = true;
     protected bool canMoveCamera = true;
     protected bool canInteract = true;
@@ -89,8 +89,16 @@ public abstract class Entity : MonoBehaviour, IEntity
     public virtual void Collect(Collectable collectable)
     {
         collectable.Collect(this);
-        collectable.transform.parent = hand;
+        if(hand != null)
+        {
+            collectable.transform.parent = hand;
+        }
+        else
+        {
+            collectable.transform.parent = transform;
+        }
         collectables.Add(collectable);
+        Equip(collectable);
     }
 
     protected virtual Entity FieldOfViewCheck()
@@ -124,5 +132,16 @@ public abstract class Entity : MonoBehaviour, IEntity
         {
             return null;
         }
+    }
+
+    public virtual void Equip(Collectable collectable)
+    {
+        if(currentCollectable != null)
+        {
+            currentCollectable.gameObject.SetActive(false);
+        }
+        currentCollectable = collectable;
+        currentCollectable.gameObject.SetActive(true);
+        collectable.Equip(this);
     }
 }

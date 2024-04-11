@@ -43,6 +43,7 @@ public class PlayerController : Entity
 
     RaycastHit hit;
     Interactable currentInteractable;
+    bool interactableIsCollectable = false;
 
 
     // Start is called before the first frame update
@@ -55,6 +56,15 @@ public class PlayerController : Entity
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
 
         customHide = true;
+
+        if (GameManager.I.debug)
+        {
+            hand.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        }
+        else
+        {
+            hand.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -259,7 +269,14 @@ public class PlayerController : Entity
             Debug.Log("Interact");
             if (currentInteractable != null)
             {
-                currentInteractable.Interact(this);
+                if(currentInteractable is Collectable)
+                {
+                    Collect((Collectable)currentInteractable);
+                }
+                else
+                {
+                    currentInteractable.Interact(this);
+                }
             }
         }
     }
