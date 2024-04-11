@@ -44,7 +44,6 @@ public class PlayerController : Entity
     RaycastHit hit;
     Interactable currentInteractable;
 
-    List<Item> items;
 
     // Start is called before the first frame update
     void Start()

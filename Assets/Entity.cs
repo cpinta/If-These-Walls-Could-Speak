@@ -18,6 +18,7 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected HidingSpot hidingSpot;
     protected HidingState hidingState;
     protected Vector3 preHidePosition;
+    protected Transform hand;
     protected bool canMoveBody = true;
     protected bool canMoveCamera = true;
     protected bool canInteract = true;
@@ -28,6 +29,8 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected int targetMask = 0;
     protected int obstructionMask = 0;
     protected bool canSeeTarget = false;
+    protected List<Collectable> collectables = new List<Collectable>();
+    protected Collectable currentCollectable;
 
     void Update()
     {
@@ -81,6 +84,13 @@ public abstract class Entity : MonoBehaviour, IEntity
         isHiding = false;
         canMoveBody = true;
         canInteract = true;
+    }
+
+    public virtual void Collect(Collectable collectable)
+    {
+        collectable.Collect(this);
+        collectable.transform.parent = hand;
+        collectables.Add(collectable);
     }
 
     protected virtual Entity FieldOfViewCheck()

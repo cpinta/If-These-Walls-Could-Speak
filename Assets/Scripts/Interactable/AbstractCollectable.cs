@@ -7,13 +7,15 @@ public abstract class AbstractCollectable : Interactable
     public bool isCollectable;
     public Item item;
 
-    public void Interact()
+    public override void Interact(Entity entity)
     {
         if(isCollectable)
         {
-            Collect();
+            Collect(entity);
             return;
         }
     }
-    public abstract void Collect();
+    public abstract void Collect(Entity entity);
+
+    public abstract void Use(Entity entity);
 }

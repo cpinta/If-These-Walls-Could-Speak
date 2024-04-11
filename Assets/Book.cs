@@ -22,7 +22,7 @@ public class Book : Collectable
 
     public override void Interact(Entity entity)
     {
-        ToggleOpenClose();
+        base.Interact(entity);
     }
 
     void ToggleOpenClose()
@@ -66,5 +66,10 @@ public class Book : Collectable
         isOpen = false;
         interactText = "Open";
 
+    }
+    public override void Use(Entity entity)
+    {
+        base.Use(entity);
+        ToggleOpenClose();
     }
 }

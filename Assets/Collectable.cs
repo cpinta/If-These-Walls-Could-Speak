@@ -8,7 +8,7 @@ public class Collectable : AbstractCollectable
     // Start is called before the first frame update
     void Start()
     {
-        
+        isCollectable = true;
     }
 
     // Update is called once per frame
@@ -17,12 +17,17 @@ public class Collectable : AbstractCollectable
         
     }
 
-    public override void Collect()
+    public override void Collect(Entity entity)
     {
 
     }
 
     public override void Interact(Entity entity)
+    {
+        Collect(entity);
+    }
+
+    public override void Use(Entity entity)
     {
 
     }
