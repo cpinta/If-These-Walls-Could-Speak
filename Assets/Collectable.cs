@@ -79,4 +79,9 @@ public class Collectable : AbstractCollectable
     {
 
     }
+
+    public override void IsHovering(bool isHovering, Entity entity)
+    {
+
+    }
 }

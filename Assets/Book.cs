@@ -80,7 +80,7 @@ public class Book : Collectable
     public override void Use(Entity entity)
     {
         base.Use(entity);
-        ToggleOpenClose();
+        //ToggleOpenClose();
     }
 
     public override void Equip(Entity entity)

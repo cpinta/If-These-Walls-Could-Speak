@@ -9,6 +9,11 @@ public class GeneralInteractable : Interactable
 
     }
 
+    public override void IsHovering(bool isHovering, Entity entity)
+    {
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {

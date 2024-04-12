@@ -18,4 +18,6 @@ public abstract class Interactable : MonoBehaviour, I_Interactable
     }
 
     public abstract void Interact(Entity entity);
+
+    public abstract void IsHovering(bool isHovering, Entity entity);
 }

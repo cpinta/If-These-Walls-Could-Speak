@@ -191,6 +191,7 @@ public class PlayerController : Entity
                 if (hit.collider.gameObject.TryGetComponent<Interactable>(out Interactable interactable))
                 {
                     currentInteractable = interactable;
+                    interactable.IsHovering(true, this);
                     if (interactable.interactText != null && interactable.interactText != "")
                     {
                         centerText.text = interactable.interactText + ": ";
@@ -219,6 +220,7 @@ public class PlayerController : Entity
         if (currentInteractable != null)
         {
             centerText.gameObject.SetActive(true);
+            currentInteractable.IsHovering(true, this);
         }
         else
         {

@@ -39,4 +39,9 @@ public class HidingSpot : Interactable
         usedToHide = false;
         col.enabled = true;
     }
+
+    public override void IsHovering(bool isHovering, Entity entity)
+    {
+
+    }
 }

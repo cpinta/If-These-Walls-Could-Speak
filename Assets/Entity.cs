@@ -144,4 +144,10 @@ public abstract class Entity : MonoBehaviour, IEntity
         currentCollectable.gameObject.SetActive(true);
         collectable.Equip(this);
     }
+
+    public virtual bool HasCollectable(Collectable collectable)
+    {
+        if(collectables.Contains(collectable)) return true;
+        return false;
+    }
 }
