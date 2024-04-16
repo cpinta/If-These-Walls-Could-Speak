@@ -2,19 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HidingSpot : Interactable
+public class CameraSpot : HidingSpot
 {
-    [SerializeField] public Transform location;
-    public bool usedToHide = false;     //means it is currently being used as a hiding spot
-    public bool syncRotation = false;
-    public bool lockCamera = false;
-
+    protected bool isCursorLocked = true;
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
-        interactText = "Hide";
+        lockCamera = true;
     }
 
     // Update is called once per frame
@@ -27,16 +23,28 @@ public class HidingSpot : Interactable
         Hide(entity);
     }
 
-    public virtual void Hide(Entity entity)
+    public override void Hide(Entity entity)
     {
-        Debug.Log("Hiding: "+name);
+        Debug.Log("Camera snapped to: " + name);
         usedToHide = true;
         col.enabled = false;
-        entity.Hide(this, true);
+        if(isCursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        entity.Hide(this, false);
     }
 
-    public virtual void UnHide()
+    public override void UnHide()
     {
+        if (!isCursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         usedToHide = false;
         col.enabled = true;
     }

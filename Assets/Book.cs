@@ -15,8 +15,8 @@ public class Book : Collectable
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         handRotation = new Vector3(-42, -138, 0);
-        handOffset = new Vector3(0, 0.1f, 0);
-        inHandScale = new Vector3(0.7f, 0.7f, 0.7f);
+        handPosition = new Vector3(0, 0.1f, 0);
+        handScale = new Vector3(0.7f, 0.7f, 0.7f);
 
     }
 

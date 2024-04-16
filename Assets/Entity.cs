@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,6 +16,7 @@ public enum HidingState
 public abstract class Entity : MonoBehaviour, IEntity
 {
     public string Name;
+    public bool moveCamera = false;
     public bool isHiding = false;
     protected HidingSpot hidingSpot;
     protected HidingState hidingState;
@@ -29,12 +32,12 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected int targetMask = 0;
     protected int obstructionMask = 0;
     protected bool canSeeTarget = false;
-    protected List<Collectable> collectables = new List<Collectable>();
-    protected Collectable currentCollectable;
+    public List<Collectable> collectables = new List<Collectable>();
+    public Collectable currentCollectable;
 
     void Update()
     {
-        if(isHiding)
+        if(moveCamera)
         {
             if (!customHide)
             {
@@ -51,19 +54,19 @@ public abstract class Entity : MonoBehaviour, IEntity
                     if (Vector3.Distance(transform.position, hidingSpot.location.position) > GameManager.I.distanceToDestination)
                     {
                         transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp);
-                        //transform.rotation = Quaternion.Lerp(transform.rotation, hidingSpot.rotation, hideLerp);
                     }
                 }
             }
         }
     }
 
-    public virtual void Hide(HidingSpot spot)
+    public virtual void Hide(HidingSpot spot, bool hiding)
     {
         if(canInteract && canMoveBody && canMoveCamera)
         {
             Debug.Log(name + " is hiding");
-            isHiding = true;
+            isHiding = hiding;
+            moveCamera = true;
             hidingSpot = spot;
             hidingState = HidingState.Entering;
             preHidePosition = transform.position;
@@ -82,6 +85,7 @@ public abstract class Entity : MonoBehaviour, IEntity
         hidingSpot = null;
 
         isHiding = false;
+        moveCamera = false;
         canMoveBody = true;
         canInteract = true;
     }
@@ -149,5 +153,58 @@ public abstract class Entity : MonoBehaviour, IEntity
     {
         if(collectables.Contains(collectable)) return true;
         return false;
+    }
+
+    public bool HasCollectableType(Type type)
+    {
+        return collectables.Any(collectable => collectable.GetType() == type);
+    }
+
+    public bool RemoveItemOfType(Collectable collectable)
+    {
+        Type type = collectable.GetType();
+        for (int i = 0; i < collectables.Count; i++)
+        {
+            if (collectables[i].GetType() == type)
+            {
+                RemoveItemAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void RemoveItemAt(int i)
+    {
+        if (currentCollectable == collectables[i])
+        {
+            currentCollectable = null;
+        }
+        Destroy(collectables[i]);
+        collectables.RemoveAt(i);
+    }
+
+    public void RemoveCurrentItem()
+    {
+        if (currentCollectable != null)
+        {
+            collectables.Remove(currentCollectable);
+            Destroy(currentCollectable);
+            currentCollectable = null;
+        }
+    }
+
+    //takes the current item from the entity and returns it in the return statement
+    public Collectable TakeCurrentItem()
+    {
+        if (currentCollectable != null)
+        {
+            Collectable collectable = currentCollectable;
+            collectables.Remove(currentCollectable);
+            currentCollectable = null;
+            collectable.transform.parent = null;
+            return collectable;
+        }
+        return null;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -57,14 +58,14 @@ public class PlayerController : Entity
 
         customHide = true;
 
-        if (GameManager.I.debug)
-        {
-            hand.gameObject.GetComponent<MeshRenderer>().enabled = true;
-        }
-        else
-        {
-            hand.gameObject.GetComponent<MeshRenderer>().enabled = false;
-        }
+        //if (GameManager.I.debug)
+        //{
+        //    hand.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        //}
+        //else
+        //{
+        //    hand.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        //}
     }
 
     // Update is called once per frame
@@ -72,7 +73,7 @@ public class PlayerController : Entity
     {
         if (hidingSpot != null)
         {
-            if (isHiding)
+            if (moveCamera)
             {
                 if (hidingState == HidingState.Entering)
                 {
@@ -86,7 +87,10 @@ public class PlayerController : Entity
                         {
                             if (Quaternion.Angle(transform.rotation, hidingSpot.location.rotation)! > hidingFreeCameraAngle && camWasMovedLastUpdate)
                             {
-                                canMoveCamera = true;
+                                if (!hidingSpot.lockCamera)
+                                {
+                                    canMoveCamera = true;
+                                }
                             }
                             if (!canMoveCamera)
                             {
@@ -98,7 +102,10 @@ public class PlayerController : Entity
                     {
                         transform.position = hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)));
                         hidingState = HidingState.In;
-                        canMoveCamera = true;
+                        if (!hidingSpot.lockCamera)
+                        {
+                            canMoveCamera = true;
+                        }
                     }
                 }
                 else if (hidingState == HidingState.Exiting)
@@ -244,11 +251,13 @@ public class PlayerController : Entity
         }
     }
 
-    public override void Hide(HidingSpot spot)
+    public override void Hide(HidingSpot spot, bool isHiding)
     {
-        base.Hide(spot);
+        base.Hide(spot, isHiding);
         rb.isKinematic = true;
         col.enabled = false;
+        canMoveCamera = !spot.lockCamera;
+        centerText.text = "";
     }
 
     public override void UnHide()
@@ -332,6 +341,7 @@ public class PlayerController : Entity
     }
     #endregion
 
+    #region Flashlight
     public void FlashlightToggle()
     {
         if(flashlight.enabled)
@@ -353,4 +363,5 @@ public class PlayerController : Entity
     {
         flashlight.enabled = false;
     }
+    #endregion
 }
