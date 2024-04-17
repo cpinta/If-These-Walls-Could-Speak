@@ -65,7 +65,6 @@ public class Door : Interactable
     {
         isOpen = false;
         interactText = "Open";
-
     }
 
     public override void IsHovering(bool isHovering, Entity entity)

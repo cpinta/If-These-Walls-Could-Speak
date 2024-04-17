@@ -9,7 +9,7 @@ public class Book : Collectable
     bool isOpen = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
@@ -79,20 +79,22 @@ public class Book : Collectable
     }
     public override void Use(Entity entity)
     {
-        base.Use(entity);
-        //ToggleOpenClose();
+
     }
 
     public override void Equip(Entity entity)
     {
-        base.Equip(entity);
         isOpen = false;
         Open();
     }
     public override void UnEquip(Entity entity)
     {
-        base.UnEquip(entity);
         isOpen = true;
         Close();
+    }
+
+    public override void IsHovering(bool isHovering, Entity entity)
+    {
+
     }
 }

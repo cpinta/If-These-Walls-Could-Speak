@@ -7,7 +7,7 @@ public class CameraSpot : HidingSpot
     protected bool isCursorLocked = true;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         base.Start();
         lockCamera = true;
@@ -27,7 +27,7 @@ public class CameraSpot : HidingSpot
     {
         Debug.Log("Camera snapped to: " + name);
         usedToHide = true;
-        col.enabled = false;
+        collider.enabled = false;
         if(isCursorLocked)
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -46,7 +46,7 @@ public class CameraSpot : HidingSpot
             Cursor.lockState = CursorLockMode.Locked;
         }
         usedToHide = false;
-        col.enabled = true;
+        collider.enabled = true;
     }
 
     public override void IsHovering(bool isHovering, Entity entity)

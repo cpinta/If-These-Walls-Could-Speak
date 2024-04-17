@@ -34,15 +34,20 @@ public class Plate : Collectable
 
     public override void Use(Entity entity)
     {
-        base.Use(entity);
+
     }
 
     public override void Equip(Entity entity)
     {
-        base.Equip(entity);
+
     }
     public override void UnEquip(Entity entity)
     {
-        base.UnEquip(entity);
+
+    }
+
+    public override void IsHovering(bool isHovering, Entity entity)
+    {
+
     }
 }

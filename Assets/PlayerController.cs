@@ -94,7 +94,8 @@ public class PlayerController : Entity
                             }
                             if (!canMoveCamera)
                             {
-                                transform.rotation = Quaternion.Lerp(transform.rotation, hidingSpot.location.rotation, hideLerp * Time.deltaTime);
+                                transform.eulerAngles = Vector3.Lerp(transform.rotation.eulerAngles, hidingSpot.location.rotation.eulerAngles + new Vector3(-270, 90, 0), hideLerp * Time.deltaTime);
+                                cam.transform.localEulerAngles = Vector3.zero;
                             }
                         }
                     }
@@ -106,20 +107,42 @@ public class PlayerController : Entity
                         {
                             canMoveCamera = true;
                         }
+                        else
+                        {
+                            transform.eulerAngles = hidingSpot.location.rotation.eulerAngles + new Vector3(-270, 90, 0);
+                        }
                     }
                 }
                 else if (hidingState == HidingState.Exiting)
                 {
+                    if (Cursor.lockState != CursorLockMode.Locked)
                     {
-                        if (Vector3.Distance(transform.position, preHidePosition) > GameManager.I.distanceToDestination)
-                        {
-                            transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp * Time.deltaTime);
-                            //cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, hidingSpot.rotation, hideLerp);
-                        }
-                        else
-                        {
-                            UnHide();
-                        }
+                        Cursor.lockState = CursorLockMode.Locked;
+                    }
+
+                    int i = 0;
+                    if (Vector3.Distance(transform.position, preHidePosition) > GameManager.I.distanceToDestination)
+                    {
+                        transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp * Time.deltaTime);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+
+                    if (Quaternion.Angle(transform.rotation, Quaternion.identity) > 1)
+                    {
+                        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, hideLerp * Time.deltaTime);
+                    }
+                    else
+                    {
+                        transform.rotation = Quaternion.identity;
+                        i++;
+                    }
+
+                    if(i == 2)
+                    {
+                        UnHide();
                     }
                 }
                 else
@@ -181,9 +204,14 @@ public class PlayerController : Entity
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
         cam.transform.localPosition = Vector3.up * baseCamHeight * (col.height / (basePlayerHeight * 2));
 
-        if (canInteract)
+        
+        if (canInteract && Cursor.lockState == CursorLockMode.Locked)
         {
             InteractRaycast();
+        }
+        else if (canInteract)
+        {
+            CursorRaycast();
         }
     }
 
@@ -235,6 +263,64 @@ public class PlayerController : Entity
         }
     }
 
+    void CursorRaycast()
+    {
+        Vector3 screenPos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, interactDistance); 
+        Ray ray = cam.ScreenPointToRay(screenPos);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider != null)
+            {
+                if (hit.collider.tag == "Clickable")
+                {
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green);
+                    if (hit.collider.gameObject.TryGetComponent<Interactable>(out Interactable interactable))
+                    {
+                        currentInteractable = interactable;
+                        interactable.IsHovering(true, this);
+                        if (interactable.interactText != null && interactable.interactText != "")
+                        {
+                            centerText.text = interactable.interactText + ": ";
+                        }
+                        else
+                        {
+                            centerText.text = "";
+                        }
+                    }
+                    else
+                    {
+                        currentInteractable = null;
+                    }
+                }
+                else
+                {
+                    currentInteractable = null;
+                }
+            }
+            else
+            {
+                Debug.DrawRay(ray.origin, ray.direction, Color.red);
+                currentInteractable = null;
+            }
+        }
+        else
+        {
+            Debug.DrawRay(cam.transform.position, cam.transform.position + (cam.transform.forward * interactDistance), Color.red);
+            currentInteractable = null;
+        }
+
+        if (currentInteractable != null)
+        {
+            centerText.gameObject.SetActive(true);
+            currentInteractable.IsHovering(true, this);
+        }
+        else
+        {
+            centerText.gameObject.SetActive(false);
+        }
+    }
+
     void CrouchRaycast()
     {
         col.height = Mathf.Lerp(col.height, basePlayerHeight * 2, playerCrouchLerp);
@@ -258,14 +344,19 @@ public class PlayerController : Entity
         col.enabled = false;
         canMoveCamera = !spot.lockCamera;
         centerText.text = "";
+        cam.transform.eulerAngles = Vector3.zero;
     }
 
     public override void UnHide()
     {
         base.UnHide();
         rb.isKinematic = false;
+        canMoveCamera = true;
+        canMoveBody = true;
         col.enabled = true;
+        hidingSpot = null;
     }
+
 
     #region Input Handling Methods
     public void Movement(InputAction.CallbackContext context)
@@ -283,10 +374,12 @@ public class PlayerController : Entity
                 if(currentInteractable is Collectable)
                 {
                     Collect((Collectable)currentInteractable);
+                    currentInteractable = null;
                 }
                 else
                 {
                     currentInteractable.Interact(this);
+                    currentInteractable = null;
                 }
             }
         }
@@ -297,6 +390,14 @@ public class PlayerController : Entity
         if (context.performed)
         {
             Debug.Log("Use Item");
+
+            if (Cursor.lockState == CursorLockMode.None)
+            {
+                if(currentInteractable != null)
+                {
+                    currentInteractable.Interact(this);
+                }
+            }
         }
     }
 

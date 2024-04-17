@@ -16,6 +16,15 @@ public class GameManager : MonoBehaviour
     public float distanceToDestination = 0.25f;
     public bool debug = true;
 
+    public string[] safePossibilites = {
+        "DARK",     // house is dark / tape is dark / wife has gone dark
+        "HOUS",     // house
+        "CLEO",     // wife's name
+        "ABBA",     // favorite band
+        "SAFE",     // opening the safe / "we are unsafe"
+        "HELP",     // help
+    };
+
     void Awake()
     {
         if (instance == null)

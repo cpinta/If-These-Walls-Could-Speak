@@ -11,7 +11,7 @@ public class HidingSpot : Interactable
 
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
         base.Start();
         interactText = "Hide";
@@ -31,14 +31,14 @@ public class HidingSpot : Interactable
     {
         Debug.Log("Hiding: "+name);
         usedToHide = true;
-        col.enabled = false;
+        collider.enabled = false;
         entity.Hide(this, true);
     }
 
     public virtual void UnHide()
     {
         usedToHide = false;
-        col.enabled = true;
+        collider.enabled = true;
     }
 
     public override void IsHovering(bool isHovering, Entity entity)

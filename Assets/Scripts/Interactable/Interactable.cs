@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Interactable : MonoBehaviour, I_Interactable
+public abstract class Interactable : MonoBehaviour
 {
-    public string interactText = "Interact";
-    public Collider col;
+    public virtual string interactText { get { return "Interact"; } protected set { } }
+    public Collider collider;
 
 
-    protected void Start()
+    protected virtual void Start()
     {
         gameObject.tag = "Interactable";
-        if(col == null)
+        if(collider == null)
         {
-            col = GetComponent<Collider>();
+            collider = GetComponent<Collider>();
         }
     }
 

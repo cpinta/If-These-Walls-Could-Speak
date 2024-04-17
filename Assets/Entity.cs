@@ -70,7 +70,7 @@ public abstract class Entity : MonoBehaviour, IEntity
             hidingSpot = spot;
             hidingState = HidingState.Entering;
             preHidePosition = transform.position;
-            canInteract = false;
+            canInteract = !hiding;
             canMoveBody = false;
             if(spot.syncRotation)
             {
@@ -88,6 +88,11 @@ public abstract class Entity : MonoBehaviour, IEntity
         moveCamera = false;
         canMoveBody = true;
         canInteract = true;
+    }
+
+    public virtual void StartUnHide()
+    {
+        hidingState = HidingState.Exiting;
     }
 
     public virtual void Collect(Collectable collectable)
