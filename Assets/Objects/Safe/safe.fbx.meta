@@ -3,7 +3,22 @@ guid: abd6428f0877f5f4ea99b6da8b2432bb
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock Dial
+    second: {fileID: 2100000, guid: ea5b3ebc856413a4a84677b1da1f2aa7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Safe
+    second: {fileID: 2100000, guid: c1aaef90df21d724089b090458ed3577, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Safe Door
+    second: {fileID: 2100000, guid: 153ce4beffa63034c91210d1ef599b85, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

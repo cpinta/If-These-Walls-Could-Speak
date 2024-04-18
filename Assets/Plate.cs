@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Plate : Collectable
 {
     bool placed = true;
+    public bool isStack = false;
+    List<Plate> plateStack = new List<Plate>();
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
-        //handRotation = new Vector3(-42, -138, 0);
-        //handOffset = new Vector3(0, 0.1f, 0);
-        //inHandScale = new Vector3(0.7f, 0.7f, 0.7f);
 
     }
 
@@ -22,9 +22,41 @@ public class Plate : Collectable
         base.Update();
     }
 
-    public override void Collect(Entity entity)
+    public override bool Collect(Entity entity)
     {
-        base.Collect(entity);
+        Plate originPlate = (Plate)entity.GetCollectableType(typeof(Plate));
+        if (originPlate != null)
+        {
+            if (isCollectable)
+            {
+                originPlate.AddPlate(this);
+                return false;
+            }
+        }
+        else
+        {
+            base.Collect(entity);
+        }
+        return true;
+    }
+
+    public void AddPlate(Plate plate)
+    {
+        plate.GiveDestination(Vector3.up * 0.03f * (plateStack.Count + 1), transform.localEulerAngles, transform.localScale, transform);
+        plateStack.Add(plate);
+        isStack = true;
+        plate.collider.enabled = false;
+    }
+
+    public Plate TakePlate()
+    {
+        Plate takenPlate = plateStack[plateStack.Count - 1];
+        plateStack.Remove(takenPlate);
+        if(plateStack.Count == 0)
+        {
+            isStack = false;
+        }
+        return takenPlate;
     }
 
     public override void Interact(Entity entity)

@@ -21,16 +21,40 @@ public class PlatePlacement : Interactable
 
     public override void Interact(Entity entity)
     {
-        if(entity.currentCollectable != null)
+        if (currentPlate == null)
         {
-            if (entity.currentCollectable is Plate)
+            if (entity.currentCollectable != null)
             {
-                currentPlate = (Plate)entity.TakeCurrentItem();
-                currentPlate.GiveDestination(transform);
+                if (entity.currentCollectable is Plate)
+                {
+                    Plate playersPlate = entity.currentCollectable as Plate;
+                    if (playersPlate.isStack)
+                    {
+                        currentPlate = playersPlate.TakePlate();
+                    }
+                    else
+                    {
+                        currentPlate = (Plate)entity.TakeCurrentItem();
+                    }
+                    currentPlate.GiveDestination(transform);
+                }
+                else
+                {
+                    return;
+                }
             }
-            else
+        }
+        else // if theres a plate on the table
+        {
+            if (entity.HasCollectableType(typeof(Plate)))       //if the player already has plates
             {
-                return;
+                Plate playersPlate = (Plate)entity.GetCollectableType(typeof(Plate));
+                playersPlate.AddPlate(currentPlate);
+                currentPlate = null;
+            }
+            else //if the player doesn't have any plates
+            {
+                entity.Collect(currentPlate);
             }
         }
     }

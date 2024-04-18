@@ -97,17 +97,12 @@ public abstract class Entity : MonoBehaviour, IEntity
 
     public virtual void Collect(Collectable collectable)
     {
-        collectable.Collect(this);
-        if(hand != null)
+        bool equip = collectable.Collect(this);
+        if(equip)
         {
-            collectable.transform.parent = hand;
+            collectables.Add(collectable);
+            Equip(collectable);
         }
-        else
-        {
-            collectable.transform.parent = transform;
-        }
-        collectables.Add(collectable);
-        Equip(collectable);
     }
 
     protected virtual Entity FieldOfViewCheck()
@@ -163,6 +158,18 @@ public abstract class Entity : MonoBehaviour, IEntity
     public bool HasCollectableType(Type type)
     {
         return collectables.Any(collectable => collectable.GetType() == type);
+    }
+    
+    public Collectable GetCollectableType(Type type)
+    {
+        for(int i = 0; i < collectables.Count; i++)
+        {
+            if (collectables[i].GetType() == type)
+            {
+                return collectables[i];
+            }
+        }
+        return null;
     }
 
     public bool RemoveItemOfType(Collectable collectable)

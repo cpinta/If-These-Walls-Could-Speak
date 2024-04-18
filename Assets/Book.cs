@@ -26,10 +26,11 @@ public class Book : Collectable
         base.Update();
     }
 
-    public override void Collect(Entity entity)
+    public override bool Collect(Entity entity)
     {
         base.Collect(entity);
         rb.isKinematic = true;
+        return true;
     }
 
     public override void Interact(Entity entity)

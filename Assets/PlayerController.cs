@@ -130,15 +130,10 @@ public class PlayerController : Entity
                         i++;
                     }
 
-                    if (Quaternion.Angle(transform.rotation, Quaternion.identity) > 1)
-                    {
-                        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, hideLerp * Time.deltaTime);
-                    }
-                    else
-                    {
-                        transform.rotation = Quaternion.identity;
-                        i++;
-                    }
+                    transform.LookAt(transform.position - (preHidePosition - transform.position), Vector3.up);
+                    transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+                    cam.transform.localEulerAngles = Vector3.Lerp(cam.transform.localEulerAngles, Vector3.right * cameraPitch, hideLerp * Time.deltaTime);
+                    i++;
 
                     if(i == 2)
                     {

@@ -39,6 +39,7 @@ public abstract class Collectable : Interactable
             else
             {
                 i++;
+                transform.localPosition = destinationPosition;
             }
             float angle = Quaternion.Angle(transform.localRotation, Quaternion.Euler(destinationRotation));
             if (angle > 0)
@@ -48,6 +49,7 @@ public abstract class Collectable : Interactable
             else
             {
                 i++;
+                transform.localRotation = transform.localRotation;
             }
 
             if (Vector3.Distance(transform.localScale, destinationScale) > 0.01)
@@ -57,6 +59,7 @@ public abstract class Collectable : Interactable
             else
             {
                 i++;
+                transform.localScale = destinationScale;
             }
 
             if (i == 3)
@@ -75,13 +78,14 @@ public abstract class Collectable : Interactable
         }
     }
 
-    public virtual void Collect(Entity entity)
+    public virtual bool Collect(Entity entity)
     {
         beingManipulated = true;
         isCollectable = false;
         this.gameObject.tag = "Untagged";
         collider.enabled = false;
         HandDestination(entity.hand);
+        return true;
     }
 
     public abstract void Use(Entity entity);
