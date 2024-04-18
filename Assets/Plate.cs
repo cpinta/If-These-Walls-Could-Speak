@@ -7,7 +7,7 @@ public class Plate : Collectable
 {
     bool placed = true;
     public bool isStack = false;
-    List<Plate> plateStack = new List<Plate>();
+    [SerializeField] List<Plate> plateStack = new List<Plate>();
 
     // Start is called before the first frame update
     void Start()
@@ -50,13 +50,21 @@ public class Plate : Collectable
 
     public Plate TakePlate()
     {
-        Plate takenPlate = plateStack[plateStack.Count - 1];
-        plateStack.Remove(takenPlate);
-        if(plateStack.Count == 0)
+        if(isStack)
         {
-            isStack = false;
+            Plate takenPlate = plateStack[plateStack.Count - 1];
+            plateStack.Remove(takenPlate);
+            if (plateStack.Count == 0)
+            {
+                isStack = false;
+            }
+            return takenPlate;
         }
-        return takenPlate;
+        else
+        {
+            return this;
+        }
+
     }
 
     public override void Interact(Entity entity)
