@@ -43,7 +43,7 @@ public abstract class Entity : MonoBehaviour, IEntity
             {
                 if(hidingState == HidingState.Entering)
                 {
-                    if (Vector3.Distance(transform.position, hidingSpot.location.position) > GameManager.I.distanceToDestination)
+                    if (Vector3.Distance(transform.position, hidingSpot.location.position) > GM.I.distanceToDestination)
                     {
                         transform.position = Vector3.Lerp(transform.position, hidingSpot.location.position, hideLerp * Time.deltaTime);
                         transform.rotation = Quaternion.Lerp(transform.rotation, hidingSpot.location.rotation, hideLerp * Time.deltaTime);
@@ -51,7 +51,7 @@ public abstract class Entity : MonoBehaviour, IEntity
                 }
                 else
                 {
-                    if (Vector3.Distance(transform.position, hidingSpot.location.position) > GameManager.I.distanceToDestination)
+                    if (Vector3.Distance(transform.position, hidingSpot.location.position) > GM.I.distanceToDestination)
                     {
                         transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp);
                     }

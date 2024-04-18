@@ -10,7 +10,6 @@ public class Safe : CameraSpot
     [SerializeField] SafeDial[] dials;
     bool isActive = false;
     bool locked = true;
-    string answer = "";
     Entity currentUnlocker;
 
 
@@ -20,8 +19,6 @@ public class Safe : CameraSpot
         base.Start();
         syncRotation = true;
         isCursorLocked = false;
-        answer = GameManager.I.safePossibilites[Random.Range(0, GameManager.I.safePossibilites.Length)];
-        Debug.Log("Safe answer: "+answer);
         TurnOffDials();
         SetDials();
         animator = GetComponent<Animator>();
@@ -79,8 +76,8 @@ public class Safe : CameraSpot
 
     void SetDials()
     {
-        string[] temp = new string[GameManager.I.safePossibilites.Length];
-        Array.Copy(GameManager.I.safePossibilites, temp, temp.Length);
+        string[] temp = new string[GM.I.safePossibilites.Length];
+        Array.Copy(GM.I.safePossibilites, temp, temp.Length);
 
         List<int> indexes = new List<int>();
         for (int i = 0; i<temp.Length; i++)
@@ -112,7 +109,7 @@ public class Safe : CameraSpot
     {
         for(int i=0; i < dials.Length; i++)
         {
-            if (dials[i].CurrentLetter() != answer[i])
+            if (dials[i].CurrentLetter() != GM.I.safeAnswer[i])
             {
                 return false;
             }

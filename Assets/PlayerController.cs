@@ -79,7 +79,7 @@ public class PlayerController : Entity
                 {
                     Vector3 vec = hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)));
                     float distance = Vector3.Distance(transform.position, hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y))));
-                    if (distance > GameManager.I.distanceToDestination)
+                    if (distance > GM.I.distanceToDestination)
                     {
                         transform.position = Vector3.Lerp(transform.position, hidingSpot.location.position - (Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y))), hideLerp * Time.deltaTime);
 
@@ -121,7 +121,7 @@ public class PlayerController : Entity
                     }
 
                     int i = 0;
-                    if (Vector3.Distance(transform.position, preHidePosition) > GameManager.I.distanceToDestination)
+                    if (Vector3.Distance(transform.position, preHidePosition) > GM.I.distanceToDestination)
                     {
                         transform.position = Vector3.Lerp(transform.position, preHidePosition, hideLerp * Time.deltaTime);
                     }

@@ -32,7 +32,7 @@ public abstract class Collectable : Interactable
         if (beingManipulated)
         {
             int i = 0;
-            if (Vector3.Distance(transform.localPosition, destinationPosition) > GameManager.I.distanceToDestination)
+            if (Vector3.Distance(transform.localPosition, destinationPosition) > GM.I.distanceToDestination)
             {
                 transform.localPosition = Vector3.Lerp(transform.localPosition, destinationPosition, Time.deltaTime * collectionLerp);
             }
