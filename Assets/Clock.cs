@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,8 +69,7 @@ public class Clock : MonoBehaviour
         }
 
         hourHand.localRotation = Quaternion.AngleAxis(handAngle, Vector3.right);
-        hour = AngleToHour(handAngle);
-        minute = (hour - Mathf.Floor(hour)) * 60;
+        minuteHand.localRotation = Quaternion.AngleAxis(AngleOfCurrentMinute(), Vector3.right);
     }
 
     void SetHourDestination(int hour)
@@ -102,6 +102,20 @@ public class Clock : MonoBehaviour
         float preAdjustmentAngle = maxAngle * hourRatio;
 
         return (preAdjustmentAngle + 90) % 360;
+    }
+
+    float MinuteToAngle(float minute)
+    {
+        float minuteRatio = minute / 60;
+        float maxAngle = 360;
+        float preAdjustmentAngle = maxAngle * minuteRatio;
+
+        return (preAdjustmentAngle + 90) % 360;
+    }
+
+    float AngleOfCurrentMinute()
+    {
+        return MinuteToAngle(DateTime.Now.Minute);
     }
 
     void Reset()
