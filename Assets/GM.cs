@@ -62,16 +62,7 @@ public class GM : MonoBehaviour
     {
         safeAnswer = safePossibilites[Random.Range(0, GM.I.safePossibilites.Length)];
         Debug.Log("Safe answer: " + safeAnswer);
-        for(int i = 0; i<12; i++)
-        {
-            clockSequence.Add(i);
-        }
-        string sequenceString = "";
-        for (int i = 0; i < 12; i++)
-        {
-            sequenceString += clockSequence[i] + " ";
-        }
-        Debug.Log("Clock Sequence set to: " + sequenceString);
+        GenerateClockSequence();
     }
 
     void GenerateClockSequence()
@@ -92,5 +83,20 @@ public class GM : MonoBehaviour
             sequenceString += clockSequence[i] + " ";
         }
         Debug.Log("Clock Sequence set to: "+sequenceString);
+    }
+
+    //used for testing to make sure the clock worked correctly on all hours
+    void ClockTestSequence()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            clockSequence.Add(i);
+        }
+        string sequenceString = "";
+        for (int i = 0; i < 12; i++)
+        {
+            sequenceString += clockSequence[i] + " ";
+        }
+        Debug.Log("Clock Sequence set to: " + sequenceString);
     }
 }

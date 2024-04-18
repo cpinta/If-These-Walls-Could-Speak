@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlatePlacement : Interactable
 {
     Plate currentPlate;
 
+    public UnityEvent<PlatePlacement> platePlaced = new UnityEvent<PlatePlacement>();
 
     // Start is called before the first frame update
     void Start()
@@ -72,5 +74,10 @@ public class PlatePlacement : Interactable
                 interactText = "";
             }
         }
+    }
+
+    public bool HasPlate()
+    {
+        return currentPlate != null;
     }
 }

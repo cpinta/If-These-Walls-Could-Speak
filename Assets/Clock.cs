@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip dong;
+
     [SerializeField] Transform minuteHand;
     Vector3 minuteHandStart;
     [SerializeField] Transform hourHand;
@@ -52,7 +55,7 @@ public class Clock : MonoBehaviour
                 if(sequenceIndex > GM.I.clockSequence.Count - 1)
                 {
                     sequenceIndex = 0;
-                    inBetweenTimer *= 2;
+                    inBetweenTimer *= 4;
                 }
             }
         }
@@ -116,6 +119,12 @@ public class Clock : MonoBehaviour
     float AngleOfCurrentMinute()
     {
         return MinuteToAngle(DateTime.Now.Minute);
+    }
+
+    public void PlayDongSound()
+    {
+        audioSource.clip = dong;
+        audioSource.Play();
     }
 
     void Reset()
