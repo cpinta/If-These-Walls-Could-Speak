@@ -39,6 +39,7 @@ public class PlatePlacement : Interactable
                         currentPlate = (Plate)entity.TakeCurrentItem();
                     }
                     currentPlate.GiveDestination(transform);
+                    platePlaced.Invoke(this);
                 }
                 else
                 {

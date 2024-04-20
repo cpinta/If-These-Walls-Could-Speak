@@ -5,6 +5,9 @@ using TMPro;
 
 public class SafeDial : Clickable
 {
+    AudioSource audioSource;
+    [SerializeField] AudioClip[] acTicks;
+
     Quaternion destination;
     [SerializeField] float rotationLerp = 10;
     int currentIndex = 0;
@@ -22,6 +25,7 @@ public class SafeDial : Clickable
         Debug.Log(transform.rotation);
         destination = transform.localRotation;
         origin = transform.localRotation;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -56,12 +60,18 @@ public class SafeDial : Clickable
         }
         destination = origin * Quaternion.Euler(0, -60 * currentIndex, 0);
         Debug.Log("SafeDial rotated to :" + tmpChars[currentIndex].text);
+        PlayTickSound();
     }
 
     public void SetLetter(int index, char letter)
     {
         charChoices[index] = letter;
         tmpChars[index].text = letter.ToString();
+    }
+
+    void PlayTickSound()
+    {
+        audioSource.PlayOneShot(acTicks[Random.Range(0, acTicks.Length)]);
     }
 
     public char CurrentLetter()

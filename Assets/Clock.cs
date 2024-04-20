@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Clock : MonoBehaviour
 {
     [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip dong;
+    [SerializeField] AudioClip acDong;
+
+    [SerializeField] AudioClip[] acTicks;
 
     [SerializeField] Transform minuteHand;
     Vector3 minuteHandStart;
@@ -28,8 +31,11 @@ public class Clock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+
         minuteHandStart = minuteHand.localEulerAngles;
         hourHandStart = hourHand.localEulerAngles;
+        GM.I.clockSolved.AddListener(Solved);
     }
 
     // Update is called once per frame
@@ -57,6 +63,7 @@ public class Clock : MonoBehaviour
                     sequenceIndex = 0;
                     inBetweenTimer *= 4;
                 }
+                PlayTickSound();
             }
         }
         else
@@ -123,8 +130,17 @@ public class Clock : MonoBehaviour
 
     public void PlayDongSound()
     {
-        audioSource.clip = dong;
-        audioSource.Play();
+        audioSource.PlayOneShot(acDong);
+    }
+
+    void Solved()
+    {
+        PlayDongSound();
+    }
+
+    public void PlayTickSound()
+    {
+        audioSource.PlayOneShot(acTicks[Random.Range(0, acTicks.Length)]);
     }
 
     void Reset()

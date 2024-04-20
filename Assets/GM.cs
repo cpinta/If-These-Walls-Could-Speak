@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GM : MonoBehaviour
 {
@@ -13,11 +14,13 @@ public class GM : MonoBehaviour
     }
     private static GM instance;
 
+    public Clock clock;
+
     public float distanceToDestination = 0.25f;
     public bool debug = true;
 
     public string[] safePossibilites = {
-        "DARK",     // house is dark / tape is dark / wife has gone dark
+        "SAVE",     // save my wife pwease
         "DEMN",     // demon
         "CLEO",     // wife's name
         "ABBA",     // favorite band
@@ -29,6 +32,8 @@ public class GM : MonoBehaviour
 
     public List<int> clockSequence = new List<int>();
     int clockSequenceLength = 6;
+
+    public UnityEvent clockSolved;
 
     void Awake()
     {

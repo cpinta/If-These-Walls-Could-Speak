@@ -14,8 +14,6 @@ public class PlatePlacementManager : MonoBehaviour
     }
     private static PlatePlacementManager instance;
 
-    [SerializeField] Clock clock;
-
     List<PlatePlacement> platePlacements = new List<PlatePlacement>();
 
 
@@ -49,7 +47,7 @@ public class PlatePlacementManager : MonoBehaviour
     {
         if((platePlacement.HasPlate() && GM.I.clockSequence.Contains(platePlacements.IndexOf(platePlacement))) || (!platePlacement.HasPlate() && !GM.I.clockSequence.Contains(platePlacements.IndexOf(platePlacement))))
         {
-            clock.PlayDongSound();
+            GM.I.clock.PlayDongSound();
             CheckAnswer();
         }
     }
