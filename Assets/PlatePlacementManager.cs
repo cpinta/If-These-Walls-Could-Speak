@@ -47,8 +47,14 @@ public class PlatePlacementManager : MonoBehaviour
     {
         if((platePlacement.HasPlate() && GM.I.clockSequence.Contains(platePlacements.IndexOf(platePlacement))) || (!platePlacement.HasPlate() && !GM.I.clockSequence.Contains(platePlacements.IndexOf(platePlacement))))
         {
-            GM.I.clock.PlayDongSound();
-            CheckAnswer();
+            if (CheckAnswer())
+            {
+                GM.I.clockSolved.Invoke();
+            }
+            else
+            {
+                GM.I.onePlateCorrect.Invoke();
+            }
         }
     }
 

@@ -331,7 +331,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 0}
-  acDong: {fileID: 0}
+  acDong: {fileID: 8300000, guid: eac7876253c832c4bb47f42a845dc4f0, type: 3}
+  acLargeDong: {fileID: 8300000, guid: fc74c004997aad24abff24367955349a, type: 3}
   acTicks:
   - {fileID: 8300000, guid: d276c262d4d2f094ba6c7b5335cd9950, type: 3}
   - {fileID: 8300000, guid: 45caac519c106da43a816e715e63db3d, type: 3}

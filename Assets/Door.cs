@@ -6,12 +6,18 @@ public class Door : Interactable
 {
     Animator animator;
     bool isOpen = false;
+    bool locked = false;
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
+        if(locked)
+        {
+            interactText = "Locked";
+            interactInput = false;
+        }
     }
 
     // Update is called once per frame
@@ -22,7 +28,23 @@ public class Door : Interactable
 
     public override void Interact(Entity entity)
     {
-        ToggleOpenClose();
+        if (locked)
+        {
+            if (entity.currentCollectable is Key)
+            {
+                entity.RemoveCurrentItem();
+                Unlock();
+            }
+        }
+        else
+        {
+            ToggleOpenClose();
+        }
+    }
+
+    void Unlock()
+    {
+        locked = false;
     }
 
     void ToggleOpenClose()
@@ -69,6 +91,18 @@ public class Door : Interactable
 
     public override void IsHovering(bool isHovering, Entity entity)
     {
-
+        if (locked)
+        {
+            if (entity.currentCollectable is Key)
+            {
+                interactText = "Unlock";
+                interactInput = true;
+            }
+            else
+            {
+                interactText = "Locked";
+                interactInput = false;
+            }
+        }
     }
 }

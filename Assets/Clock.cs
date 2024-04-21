@@ -8,6 +8,7 @@ public class Clock : MonoBehaviour
 {
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip acDong;
+    [SerializeField] AudioClip acLargeDong;
 
     [SerializeField] AudioClip[] acTicks;
 
@@ -15,6 +16,9 @@ public class Clock : MonoBehaviour
     Vector3 minuteHandStart;
     [SerializeField] Transform hourHand;
     Vector3 hourHandStart;
+
+    [SerializeField] Transform door;
+    Animator animDoor;
 
     [SerializeField] float rotationSpeed;
 
@@ -28,6 +32,9 @@ public class Clock : MonoBehaviour
 
     int sequenceIndex = 0;
 
+    [SerializeField] bool openDoor = false;
+    float doorOpenLerp = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +43,9 @@ public class Clock : MonoBehaviour
         minuteHandStart = minuteHand.localEulerAngles;
         hourHandStart = hourHand.localEulerAngles;
         GM.I.clockSolved.AddListener(Solved);
+        GM.I.onePlateCorrect.AddListener(OnePlateCorrect);
+
+        animDoor = door.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -68,13 +78,16 @@ public class Clock : MonoBehaviour
         }
         else
         {
-            if(inBetweenTimer > 0)
+            if(!openDoor)
             {
-                inBetweenTimer -= Time.deltaTime;
-            }
-            else
-            {
-                SetHourDestination(GM.I.clockSequence[sequenceIndex]);
+                if (inBetweenTimer > 0)
+                {
+                    inBetweenTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    SetHourDestination(GM.I.clockSequence[sequenceIndex]);
+                }
             }
         }
 
@@ -132,8 +145,21 @@ public class Clock : MonoBehaviour
     {
         audioSource.PlayOneShot(acDong);
     }
+    public void PlayLargeDongSound()
+    {
+        audioSource.PlayOneShot(acLargeDong);
+    }
+
+
 
     void Solved()
+    {
+        PlayLargeDongSound();
+        openDoor = true;
+        animDoor.SetBool("Open", true);
+    }
+
+    void OnePlateCorrect()
     {
         PlayDongSound();
     }
@@ -145,6 +171,7 @@ public class Clock : MonoBehaviour
 
     void Reset()
     {
-        
+        openDoor = false;
+        animDoor.SetBool("Open", false);
     }
 }

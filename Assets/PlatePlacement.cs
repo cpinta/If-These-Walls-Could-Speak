@@ -23,7 +23,7 @@ public class PlatePlacement : Interactable
 
     public override void Interact(Entity entity)
     {
-        if (currentPlate == null)       //if there is no plate on the table
+        if (currentPlate == null)                            //if there is no plate on the table
         {
             if (entity.currentCollectable != null)
             {

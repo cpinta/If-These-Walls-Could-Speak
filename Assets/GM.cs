@@ -33,7 +33,10 @@ public class GM : MonoBehaviour
     public List<int> clockSequence = new List<int>();
     int clockSequenceLength = 6;
 
+    public PlatePlacementManager platePlacementManager;
+
     public UnityEvent clockSolved;
+    public UnityEvent onePlateCorrect;
 
     void Awake()
     {
