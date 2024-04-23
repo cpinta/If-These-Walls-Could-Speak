@@ -219,4 +219,9 @@ public abstract class Entity : MonoBehaviour, IEntity
         }
         return null;
     }
+
+    public virtual void Hit()
+    {
+
+    }
 }

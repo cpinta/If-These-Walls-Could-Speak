@@ -393,6 +393,20 @@ public class PlayerController : Entity
                     currentInteractable.Interact(this);
                 }
             }
+            else
+            {
+                if(currentCollectable != null)
+                {
+                    currentCollectable.Use(this, true);
+                }
+            }
+        }
+        else if(context.canceled) 
+        {
+            if (currentCollectable != null)
+            {
+                currentCollectable.Use(this, false);
+            }
         }
     }
 

@@ -14,6 +14,7 @@ public class VHSTape : Collectable
         base.Start();
         handScale = Vector3.one * 150;
         handRotation = new Vector3 (220, 40, 0);
+        interactText = "Pickup";
     }
 
     // Update is called once per frame
@@ -37,7 +38,7 @@ public class VHSTape : Collectable
 
     }
 
-    public override void Use(Entity entity)
+    public override void Use(Entity entity, bool isDown)
     {
 
     }

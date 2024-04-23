@@ -93,7 +93,7 @@ public abstract class Collectable : Interactable
         return true;
     }
 
-    public abstract void Use(Entity entity);
+    public abstract void Use(Entity entity, bool isDown);
 
     public abstract void Equip(Entity entity);
     public abstract void UnEquip(Entity entity);

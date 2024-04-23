@@ -71,10 +71,6 @@ public class Plate : Collectable
         base.Interact(entity);
     }
 
-    public override void Use(Entity entity)
-    {
-
-    }
 
     public override void Equip(Entity entity)
     {
@@ -103,5 +99,10 @@ public class Plate : Collectable
             plateStack.Clear();
             isStack = false;
         }
+    }
+
+    public override void Use(Entity entity, bool isDown)
+    {
+
     }
 }

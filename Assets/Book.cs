@@ -77,7 +77,7 @@ public class Book : Collectable
         isOpen = false;
 
     }
-    public override void Use(Entity entity)
+    public override void Use(Entity entity, bool isDown)
     {
 
     }

@@ -34,7 +34,7 @@ public class Key : Collectable
 
     }
 
-    public override void Use(Entity entity)
+    public override void Use(Entity entity, bool isDown)
     {
 
     }
