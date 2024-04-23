@@ -78,4 +78,12 @@ public class SafeDial : Clickable
     {
         return charChoices[currentIndex];
     }
+
+    public override void ResetGame()
+    {
+        currentIndex = 0;
+        destination = transform.localRotation;
+        origin = transform.localRotation;
+        interactText = "Spin";
+    }
 }

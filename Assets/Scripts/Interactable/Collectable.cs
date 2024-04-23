@@ -18,12 +18,17 @@ public abstract class Collectable : Interactable
     protected Vector3 destinationScale = Vector3.one;
     public Item item;
 
+    Vector3 startingLocation = Vector3.zero;
+    Quaternion startingRotation;
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         isCollectable = true;
         interactText = "Grab";
+        startingLocation = transform.position;
+        startingRotation = transform.rotation;
     }
 
     // Update is called once per frame
@@ -132,5 +137,11 @@ public abstract class Collectable : Interactable
     public void HandDestination(Transform hand)
     {
         GiveDestination(handPosition, handRotation, handScale, hand);
+    }
+
+    public override void ResetGame()
+    {
+        transform.position = startingLocation;
+        transform.rotation = startingRotation;
     }
 }

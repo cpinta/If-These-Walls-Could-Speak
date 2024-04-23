@@ -17,7 +17,6 @@ public class Book : Collectable
         handRotation = new Vector3(-42, -138, 0);
         handPosition = new Vector3(0, 0.1f, 0);
         handScale = new Vector3(0.7f, 0.7f, 0.7f);
-
     }
 
     // Update is called once per frame
@@ -97,5 +96,12 @@ public class Book : Collectable
     public override void IsHovering(bool isHovering, Entity entity)
     {
 
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        isOpen = false;
+        animator.SetBool("Open", false);
     }
 }

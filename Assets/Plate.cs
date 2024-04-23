@@ -5,7 +5,6 @@ using UnityEngine.UIElements;
 
 public class Plate : Collectable
 {
-    bool placed = true;
     public bool isStack = false;
     [SerializeField] List<Plate> plateStack = new List<Plate>();
 
@@ -89,5 +88,20 @@ public class Plate : Collectable
     public override void IsHovering(bool isHovering, Entity entity)
     {
 
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        if(isStack)
+        {
+            for(int i = 0; i < plateStack.Count; i++)
+            {
+                plateStack[i].transform.parent = null;
+                plateStack[i].ResetGame();
+            }
+            plateStack.Clear();
+            isStack = false;
+        }
     }
 }

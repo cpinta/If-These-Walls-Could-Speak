@@ -105,4 +105,14 @@ public class Door : Interactable
             }
         }
     }
+
+    public override void ResetGame()
+    {
+        if (isOpen)
+        {
+            Close();
+            isOpen = false;
+            interactText = "Open";
+        }
+    }
 }

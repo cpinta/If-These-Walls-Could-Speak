@@ -81,4 +81,14 @@ public class PlatePlacement : Interactable
     {
         return currentPlate != null;
     }
+
+    public override void ResetGame()
+    {
+        if(currentPlate != null)
+        {
+            currentPlate.transform.parent = null;
+            currentPlate.ResetGame();
+            currentPlate = null;
+        }
+    }
 }

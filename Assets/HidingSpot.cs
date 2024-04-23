@@ -45,4 +45,9 @@ public class HidingSpot : Interactable
     {
 
     }
+
+    public override void ResetGame()
+    {
+        usedToHide = false;
+    }
 }

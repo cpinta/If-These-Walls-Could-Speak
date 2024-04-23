@@ -21,4 +21,6 @@ public abstract class Interactable : MonoBehaviour
     public abstract void Interact(Entity entity);
 
     public abstract void IsHovering(bool isHovering, Entity entity);
+
+    public abstract void ResetGame();
 }
