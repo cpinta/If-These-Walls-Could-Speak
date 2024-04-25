@@ -27,6 +27,7 @@ public class PlayerController : Entity
     [SerializeField] int hidingFreeCameraAngle = 15;
     bool camWasMovedLastUpdate = false;
     float baseCamHeight = 0.6f;
+    [SerializeField] float yMousePromptOffset = 4;
 
     //Player Variables
     float currentSpeed = 0;
@@ -199,15 +200,24 @@ public class PlayerController : Entity
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
         cam.transform.localPosition = Vector3.up * baseCamHeight * (col.height / (basePlayerHeight * 2));
 
-        
-        if (canInteract && Cursor.lockState == CursorLockMode.Locked)
+        if(canInteract)
         {
-            InteractRaycast();
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                InteractRaycast();
+                centerText.rectTransform.localPosition = Vector3.zero;
+            }
+            else
+            {
+                CursorRaycast();
+                centerText.rectTransform.localPosition = MouseScreenPosition() + (Vector3.up * yMousePromptOffset);
+            }
         }
-        else if (canInteract)
-        {
-            CursorRaycast();
-        }
+    }
+
+    Vector3 MouseScreenPosition()
+    {
+        return Mouse.current.position.value - (Screen.width / 2 * Vector2.right) - (Screen.height / 2 * Vector2.up);
     }
 
     void InteractRaycast()
