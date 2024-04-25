@@ -7,6 +7,7 @@ public class Book : Collectable
     Animator animator;
     Rigidbody rb;
     bool isOpen = false;
+    Transform parent;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -17,6 +18,7 @@ public class Book : Collectable
         handRotation = new Vector3(-42, -138, 0);
         handPosition = new Vector3(0, 0.1f, 0);
         handScale = new Vector3(0.7f, 0.7f, 0.7f);
+        parent = transform.parent;
     }
 
     // Update is called once per frame
@@ -103,5 +105,13 @@ public class Book : Collectable
         base.ResetGame();
         isOpen = false;
         animator.SetBool("Open", false);
+        collider.enabled = false;
+        transform.parent = parent;
+    }
+
+    public void EnableGrabbing()
+    {
+        collider.enabled = true;
+        transform.parent = null;
     }
 }
