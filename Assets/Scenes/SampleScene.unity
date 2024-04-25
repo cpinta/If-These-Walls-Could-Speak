@@ -407,6 +407,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3711244583424114711, guid: ce8f8102d3befdc42b916a753de26a8a, type: 3}
   m_PrefabInstance: {fileID: 754486102}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &244231525 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1496928697027173593, guid: 2d49e7c90b2a421479807a308d99b6fb, type: 3}
+  m_PrefabInstance: {fileID: 709886655}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &244231529
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 244231525}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2769136063075320362, guid: 2d49e7c90b2a421479807a308d99b6fb, type: 3}
 --- !u!1 &248121349
 GameObject:
   m_ObjectHideFlags: 0
@@ -2448,6 +2475,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -7108526074593422279, guid: 2d49e7c90b2a421479807a308d99b6fb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 121646750}
+    - targetCorrespondingSourceObject: {fileID: 1496928697027173593, guid: 2d49e7c90b2a421479807a308d99b6fb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 244231529}
     - targetCorrespondingSourceObject: {fileID: -8578433623609224457, guid: 2d49e7c90b2a421479807a308d99b6fb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1287009739}
@@ -3123,6 +3153,7 @@ MonoBehaviour:
   mouseSmoothTime: 0.03
   mouseSensitivity: 6
   hidingFreeCameraAngle: 15
+  yMousePromptOffset: -50
   playerSpeed: 4
   playerJauntMovementMultiplier: 1.4
   playerCrouchMovementMultiplier: 0.75
@@ -3516,6 +3547,7 @@ GameObject:
   - component: {fileID: 985492227}
   - component: {fileID: 985492226}
   - component: {fileID: 985492225}
+  - component: {fileID: 985492228}
   m_Layer: 0
   m_Name: Fridge
   m_TagString: Untagged
@@ -3590,6 +3622,27 @@ Transform:
   - {fileID: 1246900378}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &985492228
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985492224}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000035, y: 1.8000034, z: 0.81}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1057316419
 GameObject:
   m_ObjectHideFlags: 0
