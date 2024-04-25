@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    public virtual string interactText { get { return "Interact"; } protected set { } }
+    public virtual string interactText { get { return _interactText; } protected set { _interactText = value; } }
+    string _interactText;
     public virtual bool interactInput { get { return true; } protected set { } }
     public Collider collider;
 

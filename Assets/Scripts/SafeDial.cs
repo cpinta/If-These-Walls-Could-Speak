@@ -58,7 +58,7 @@ public class SafeDial : Clickable
         {
             currentIndex = 0;
         }
-        destination = origin * Quaternion.Euler(0, -60 * currentIndex, 0);
+        destination = origin * Quaternion.Euler(0, 0, 60 * currentIndex);
         Debug.Log("SafeDial rotated to :" + tmpChars[currentIndex].text);
         PlayTickSound();
     }

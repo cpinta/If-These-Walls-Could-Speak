@@ -6,7 +6,8 @@ public class Door : Interactable
 {
     Animator animator;
     bool isOpen = false;
-    bool locked = false;
+    bool initialLockState = false;
+    [SerializeField] bool locked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class Door : Interactable
             interactText = "Locked";
             interactInput = false;
         }
+        initialLockState = locked;
     }
 
     // Update is called once per frame
@@ -114,5 +116,6 @@ public class Door : Interactable
             isOpen = false;
             interactText = "Open";
         }
+        locked = initialLockState;
     }
 }

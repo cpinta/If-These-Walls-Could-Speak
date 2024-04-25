@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,6 +9,7 @@ public class Safe : CameraSpot
 {
     Animator animator;
     [SerializeField] SafeDial[] dials;
+    [SerializeField] SafeButton button;
     bool isActive = false;
     bool locked = true;
     Entity currentUnlocker;
@@ -22,6 +24,10 @@ public class Safe : CameraSpot
         TurnOffDials();
         SetDials();
         animator = GetComponent<Animator>();
+
+        interactText = "Attempt Unlock";
+
+        button.buttonPressed.AddListener(AttemptUnlock);
     }
 
     // Update is called once per frame
@@ -29,7 +35,11 @@ public class Safe : CameraSpot
     {
         if (locked)
         {
-            AttemptUnlock();
+
+        }
+        else
+        {
+            collider.enabled = false;
         }
     }
 
@@ -102,6 +112,7 @@ public class Safe : CameraSpot
             locked = false;
             animator.SetBool("Open", true);
             currentUnlocker.StartUnHide();
+            collider.enabled = false;
         }
     }
 
@@ -115,5 +126,11 @@ public class Safe : CameraSpot
             }
         }
         return true;
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        collider.enabled = true;
     }
 }

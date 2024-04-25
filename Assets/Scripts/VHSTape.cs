@@ -12,8 +12,8 @@ public class VHSTape : Collectable
     void Start()
     {
         base.Start();
-        handScale = Vector3.one * 150;
-        handRotation = new Vector3 (220, 40, 0);
+        //handScale = Vector3.one * 150;
+        handRotation = new Vector3 (-30, 40, 0);
         interactText = "Pickup";
     }
 

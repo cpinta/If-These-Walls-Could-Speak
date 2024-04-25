@@ -94,7 +94,7 @@ public class PlayerController : Entity
                             }
                             if (!canMoveCamera)
                             {
-                                transform.eulerAngles = Vector3.Lerp(transform.rotation.eulerAngles, hidingSpot.location.rotation.eulerAngles + new Vector3(-270, 90, 0), hideLerp * Time.deltaTime);
+                                transform.eulerAngles = Vector3.Lerp(transform.rotation.eulerAngles, hidingSpot.location.rotation.eulerAngles, hideLerp * Time.deltaTime);
                                 cam.transform.localEulerAngles = Vector3.zero;
                             }
                         }
@@ -109,7 +109,7 @@ public class PlayerController : Entity
                         }
                         else
                         {
-                            transform.eulerAngles = hidingSpot.location.rotation.eulerAngles + new Vector3(-270, 90, 0);
+                            transform.eulerAngles = hidingSpot.location.rotation.eulerAngles;
                         }
                     }
                 }
