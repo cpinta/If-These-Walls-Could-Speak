@@ -68,5 +68,13 @@ public class Sledgehammer : Collectable
                 Debug.Log("hit self");
             }
         }
+        else
+        {
+            Chain chain;
+            if(other.TryGetComponent<Chain>(out chain))
+            {
+                chain.Break();
+            }
+        }
     }
 }

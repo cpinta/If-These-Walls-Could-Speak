@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 1332367937145201678}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.009359872, y: 0.026119558, z: 0.39871743}
+  m_LocalPosition: {x: 0.03, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3929328036205861418}
@@ -107,8 +107,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2291548274206373892}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.001194691}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.03, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -143,7 +143,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.3240002, y: -0, z: -0, w: -0.946057}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.009359871, y: 0.02611956, z: 0.39871743}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 585621574608990157}
@@ -222,8 +222,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7441984608995661586}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.001194691}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -260,8 +260,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -2.9111987e-15, y: 1, z: 0.000000037748947, w: 0.0000000754979}
   m_LocalPosition: {x: -5.5, y: 2.2463078, z: 15.94614}
-  m_LocalScale: {x: 52.550262, y: 52.550262, z: 52.550262}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 585621574608990157}
   - {fileID: 3929328036205861418}
@@ -340,8 +340,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1a205ccb37ff418459b88905691e5155, type: 3}
   minuteHand: {fileID: 7755102365623952912}
   hourHand: {fileID: 3433268370149906586}
+  door: {fileID: 0}
   rotationSpeed: 1000
   handAngle: 0
+  openDoor: 0
 --- !u!82 &4335603463935912487
 AudioSource:
   m_ObjectHideFlags: 0
