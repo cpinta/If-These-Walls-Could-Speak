@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class FridgeLetter : MonoBehaviour
 {
-    MeshFilter meshFilter;
-    Mesh currentMesh;
+    [SerializeField] MeshFilter meshFilter;
 
     bool isAtDestination;
     Vector3 destination = Vector3.zero;
 
+    float letterSpeed = 5;
+
     // Start is called before the first frame update
     void Start()
     {
-        meshFilter.mesh = new Mesh();
+        transform.localRotation = Quaternion.Euler(90, 0, 0);
     }
 
     // Update is called once per frame
@@ -21,16 +22,24 @@ public class FridgeLetter : MonoBehaviour
     {
         if(!isAtDestination)
         {
-
+            float distance = Vector3.Distance(transform.localPosition, destination);
+            if (Vector3.Distance(transform.localPosition, destination) > GM.I.distanceToDestination)
+            {
+                transform.localPosition = Vector3.MoveTowards(transform.localPosition, destination, Time.deltaTime * letterSpeed);
+            }
+            else
+            {
+                isAtDestination = true;
+            }
         }
     }
 
     public bool SetLetter(char letter)
     {
-        currentMesh = Resources.Load<Mesh>("Letters/"+letter.ToString().ToLower());
-        if(currentMesh != null)
+        meshFilter.mesh = Resources.Load<Mesh>("Letters/"+letter.ToString().ToLower());
+        if(meshFilter.mesh != null)
         {
-            meshFilter.mesh = currentMesh;
+            meshFilter.mesh = meshFilter.mesh;
             Debug.Log("FridgeLetter: fridge letter "+letter.ToString()+" loaded to "+this.name);
             return true;
         }
@@ -42,5 +51,14 @@ public class FridgeLetter : MonoBehaviour
     {
         this.destination = destination;
         isAtDestination = false;
+    }
+
+    public void SetColor()
+    {
+        Renderer mesh = GetComponent<Renderer>();
+        if (mesh != null)
+        {
+            mesh.material.color = Color.HSVToRGB(Random.value, 1, 1);
+        }
     }
 }
