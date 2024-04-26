@@ -3638,6 +3638,7 @@ GameObject:
   - component: {fileID: 985492226}
   - component: {fileID: 985492225}
   - component: {fileID: 985492228}
+  - component: {fileID: 985492229}
   m_Layer: 0
   m_Name: Fridge
   m_TagString: Untagged
@@ -3734,6 +3735,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0000035, y: 1.8000034, z: 0.81}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &985492229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985492224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fbafb5436b173e43999873ee4dd24db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  letterManager: {fileID: 1710518157}
 --- !u!1 &1057316419
 GameObject:
   m_ObjectHideFlags: 0
@@ -5422,8 +5436,8 @@ Transform:
   m_GameObject: {fileID: 1710518155}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.315, y: 0, z: 0.411}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.625, z: 0.411}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 985492227}
@@ -5442,6 +5456,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabLetter: {fileID: 2315867239827063480, guid: 6dfaa83e8b68d6b41a76e0be931b0afc, type: 3}
   letterSpacing: 0.1
+  lineSpacing: 0.15
+  lettersXLimits: {x: -0.32, y: 0.35}
+  lettersYLimits: {x: -0.2, y: 0.2}
+  messageQueue: []
 --- !u!1 &1721502915
 GameObject:
   m_ObjectHideFlags: 0

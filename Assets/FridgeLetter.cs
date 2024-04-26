@@ -12,9 +12,10 @@ public class FridgeLetter : MonoBehaviour
     float letterSpeed = 5;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         transform.localRotation = Quaternion.Euler(90, 0, 0);
+        transform.localScale = new Vector3(-1, 1, 1);
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class FridgeLetter : MonoBehaviour
         if(meshFilter.mesh != null)
         {
             meshFilter.mesh = meshFilter.mesh;
-            Debug.Log("FridgeLetter: fridge letter "+letter.ToString()+" loaded to "+this.name);
+            //Debug.Log("FridgeLetter: fridge letter "+letter.ToString()+" loaded to "+this.name);
             return true;
         }
         Debug.Log("FridgeLetter: couldn't load fridge letter " + letter.ToString() + " for " + this.name);
