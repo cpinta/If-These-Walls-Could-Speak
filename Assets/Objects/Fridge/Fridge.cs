@@ -31,7 +31,7 @@ public class Fridge : MonoBehaviour
     {
         if (!rendered)
         {
-            string st = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string st = "abcdefghijklmnopqrstuvwxyz";
             letterManager.AddMessageToQueue(st[Random.Range(0, st.Length)] + "bingus " + st[Random.Range(0, st.Length)] + "bongus");
             letterManager.DisplayLatestQueueInMessage();
             rendered = true;
