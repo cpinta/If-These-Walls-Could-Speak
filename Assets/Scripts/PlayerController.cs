@@ -16,6 +16,7 @@ public class PlayerController : Entity
     InputAction action;
     public TMP_Text centerText;
     [SerializeField] Light flashlight;
+    bool flashlightPickedUp = false;
 
     Vector2 movementVector = Vector2.zero;
     //Camera Variables
@@ -58,6 +59,8 @@ public class PlayerController : Entity
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
 
         customHide = true;
+
+        flashlight.enabled = false;
 
         //if (GameManager.I.debug)
         //{
@@ -454,7 +457,7 @@ public class PlayerController : Entity
 
     public void ToggleFlashlight(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && flashlightPickedUp)
         {
             FlashlightToggle();
         }
@@ -482,6 +485,11 @@ public class PlayerController : Entity
     public void FlashlightOff()
     {
         flashlight.enabled = false;
+    }
+
+    public void FlashLightPickup()
+    {
+        flashlightPickedUp = true;
     }
     #endregion
 }
