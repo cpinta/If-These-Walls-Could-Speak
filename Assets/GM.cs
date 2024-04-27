@@ -28,12 +28,16 @@ public class GM : MonoBehaviour
         "HELP",     // help
     };
 
+    public AudioClip[] safeAnswerRadio;
+    public int safeAnswerIndex = 0;
+
     public string safeAnswer = "";
 
     public List<int> clockSequence = new List<int>();
     int clockSequenceLength = 6;
 
     public PlatePlacementManager platePlacementManager;
+    public Radio radio;
 
     public UnityEvent clockSolved;
     public UnityEvent onePlateCorrect;
@@ -50,6 +54,7 @@ public class GM : MonoBehaviour
             Destroy(this);
         }
 
+        radio = FindObjectOfType<Radio>();
 
         StartGame();
     }
@@ -68,7 +73,10 @@ public class GM : MonoBehaviour
 
     void StartGame()
     {
-        safeAnswer = safePossibilites[Random.Range(0, GM.I.safePossibilites.Length)];
+        safeAnswerIndex = Random.Range(0, GM.I.safePossibilites.Length);
+        safeAnswer = safePossibilites[safeAnswerIndex];
+        radio.SetAnswer(safeAnswerRadio[safeAnswerIndex]);
+
         Debug.Log("Safe answer: " + safeAnswer);
         GenerateClockSequence();
     }
