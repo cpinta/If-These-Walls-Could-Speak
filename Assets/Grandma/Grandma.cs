@@ -38,7 +38,7 @@ public class Grandma : Entity
 
     float checkFOVeverySecs = 0.2f;
     float cantFindPlayerTime = 5; //Time it takes for Grandma to stop chasing the Player when she doesnt see them for a while
-    float cantFindPlayerTimer = 0;
+    [SerializeField] float cantFindPlayerTimer = 0;
 
     float standingTimeMin = 1;
     float standingTimeMax = 2;
@@ -75,6 +75,8 @@ public class Grandma : Entity
     string LookingForPlayer = "Looking for Player";
     string PlayerLeaving = "Player Leaving";
     string Spawned = "Spawned";
+
+    [SerializeField] AudioClip[] acFootsteps;
 
     // Start is called before the first frame update
     void Start()
@@ -440,5 +442,10 @@ public class Grandma : Entity
             case GrandmaState.Chasing:
                 break;
         }
+    }
+
+    public void PlayFootStep()
+    {
+        audioSource.PlayOneShot(acFootsteps[Random.Range(0, acFootsteps.Length)]);
     }
 }

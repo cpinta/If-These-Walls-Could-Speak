@@ -12,6 +12,7 @@ public class PlayerController : Entity
     //Components
     Rigidbody rb;
     CapsuleCollider col;
+    float baseColliderHeight = 2f;
     [SerializeField] Camera cam;
     InputAction action;
     public TMP_Text centerText;
@@ -28,7 +29,12 @@ public class PlayerController : Entity
     [SerializeField] int hidingFreeCameraAngle = 15;
     bool camWasMovedLastUpdate = false;
     float baseCamHeight = 0.6f;
+    float baseHandHeight = 0.25f;
     [SerializeField] float yMousePromptOffset = 4;
+
+    float viewBobMagnitude = 0;
+    [SerializeField] float viewBobIntensity = 1;
+    [SerializeField] int viewBobDirection = 1;
 
     //Player Variables
     float currentSpeed = 0;
@@ -54,22 +60,13 @@ public class PlayerController : Entity
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         GetComponent<MeshRenderer>().enabled = false;
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
 
         customHide = true;
 
         flashlight.enabled = false;
-
-        //if (GameManager.I.debug)
-        //{
-        //    hand.gameObject.GetComponent<MeshRenderer>().enabled = true;
-        //}
-        //else
-        //{
-        //    hand.gameObject.GetComponent<MeshRenderer>().enabled = false;
-        //}
     }
 
     // Update is called once per frame
@@ -174,6 +171,8 @@ public class PlayerController : Entity
             if (canMoveBody)
             {
                 currentSpeed = playerSpeed;
+
+
                 if (isCrouching)
                 {
                     currentSpeed *= playerCrouchMovementMultiplier;
@@ -201,9 +200,11 @@ public class PlayerController : Entity
         }
 
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
-        cam.transform.localPosition = Vector3.up * baseCamHeight * (col.height / (basePlayerHeight * 2));
+        cam.transform.localPosition = Vector3.up * col.height - (Vector3.up * (baseColliderHeight - baseCamHeight)) + (Vector3.up * viewBobMagnitude);
+        Debug.Log($"{baseCamHeight} * ({col.height} / {baseColliderHeight}) + (Vector3.up * {viewBobMagnitude}) = {Vector3.up * baseCamHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude)}");
+        hand.transform.localPosition = Vector3.up * baseHandHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude);
 
-        if(canInteract)
+        if (canInteract)
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
