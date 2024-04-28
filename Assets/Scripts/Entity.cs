@@ -201,7 +201,7 @@ public abstract class Entity : MonoBehaviour, IEntity
         if (currentCollectable != null)
         {
             collectables.Remove(currentCollectable);
-            Destroy(currentCollectable);
+            Destroy(currentCollectable.gameObject);
             currentCollectable = null;
         }
     }

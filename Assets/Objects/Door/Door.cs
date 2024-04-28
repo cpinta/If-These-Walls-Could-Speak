@@ -47,6 +47,7 @@ public class Door : Interactable
     void Unlock()
     {
         locked = false;
+        interactText = "Open";
     }
 
     void ToggleOpenClose()
