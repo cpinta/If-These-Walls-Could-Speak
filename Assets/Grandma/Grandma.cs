@@ -23,13 +23,15 @@ public class Grandma : Entity
 {
     Entity target;
     Entity[] potentialTargets;
-    GrandmaState gmaState;
+    [SerializeField] GrandmaState gmaState;
+    bool firstStateAfterSpawn;
     CurrentDirection currentDirection;
     GmaDestination[] destinations;
     GmaDestination destination;              //used when wandering around the house. Ignored if player is found
     [SerializeField] Transform face;
     NavMeshAgent navAgent;
     Animator animator;
+    AudioSource audioSource;
 
     RaycastHit hit;
     float sightDistance = 100;
@@ -67,6 +69,13 @@ public class Grandma : Entity
     private Vector2 velocity;
     Vector2 smoothDeltaPostion;
 
+    string FoundPlayer = "Found Player";
+    string HitByPlayer = "Hit By Player";
+    string KillingPlayer = "Killing Player";
+    string LookingForPlayer = "Looking for Player";
+    string PlayerLeaving = "Player Leaving";
+    string Spawned = "Spawned";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,6 +83,7 @@ public class Grandma : Entity
         destinations = FindObjectsOfType<GmaDestination>();
         potentialTargets = FindObjectsOfType<Entity>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         animator.applyRootMotion = true;
         navAgent.updatePosition = false;
@@ -243,6 +253,7 @@ public class Grandma : Entity
 
         destination = GetNextDestination(destination);
 
+        firstStateAfterSpawn = true;
         // 50/50 if starting standing or wandering
         if (Random.value > 0.5f)
         {
@@ -252,6 +263,8 @@ public class Grandma : Entity
         {
             ChangeState(GrandmaState.Wandering);
         }
+
+        PlayRandomSoundFromFolder(Spawned, true);
     }
 
     void SyncAnimatorAndAgent()
@@ -302,6 +315,11 @@ public class Grandma : Entity
                 standingTimer = Random.Range(standingTimeMin, standingTimeMax);
                 navAgent.isStopped = true;
                 animator.SetBool("Sprint", false);
+                if(!firstStateAfterSpawn)
+                {
+                    PlayRandomSoundFromFolder(LookingForPlayer, true);
+                }
+                firstStateAfterSpawn = false;
                 break;
             case GrandmaState.Wandering:
                 navAgent.isStopped = false;
@@ -335,8 +353,27 @@ public class Grandma : Entity
                 navAgent.destination = target.transform.position;
                 cantFindPlayerTimer = cantFindPlayerTime;
                 animator.SetBool("Sprint", true);
+                PlayRandomSoundFromFolder(FoundPlayer, true);
                 break;
         }
+    }
+
+    void PlayRandomSoundFromFolder(string folderName, bool interruptCurrent)
+    {
+        if (audioSource.isPlaying)
+        {
+            if (!interruptCurrent)
+            {
+                return;
+            }
+        }
+
+        AudioClip[] clips = Resources.LoadAll<AudioClip>("Voicelines/Grandma/" + folderName);
+        audioSource.clip = clips[Random.Range(0, clips.Length)];
+        audioSource.Play();
+
+        //AudioClip clip = Resources.Load<AudioClip>("Voicelines/Grandma/Found Player/come here i missed you");
+        //audioSource.clip = clip;
     }
 
     GmaDestination GetNextDestination(GmaDestination dest)
@@ -384,6 +421,8 @@ public class Grandma : Entity
             }
         }
     }
+
+
 
     void PlayerRaycast()
     {
