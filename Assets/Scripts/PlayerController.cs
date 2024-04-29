@@ -18,6 +18,7 @@ public class PlayerController : Entity
     public TMP_Text centerText;
     [SerializeField] Light flashlight;
     bool flashlightPickedUp = false;
+    AudioSource audioSource;
 
     Vector2 movementVector = Vector2.zero;
     //Camera Variables
@@ -32,9 +33,10 @@ public class PlayerController : Entity
     float baseHandHeight = 0.25f;
     [SerializeField] float yMousePromptOffset = 4;
 
+    Vector3 viewBobStart = Vector3.zero;
+    float viewBobMultiplier = 1;
+    int viewBobMod = 3;
     float viewBobMagnitude = 0;
-    [SerializeField] float viewBobIntensity = 1;
-    [SerializeField] int viewBobDirection = 1;
 
     //Player Variables
     float currentSpeed = 0;
@@ -49,6 +51,7 @@ public class PlayerController : Entity
 
     bool isCrouching = false;
     bool isJaunting = false;
+    public bool canJaunt = false;
 
     RaycastHit hit;
     Interactable currentInteractable;
@@ -60,7 +63,8 @@ public class PlayerController : Entity
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
-        //Cursor.lockState = CursorLockMode.Locked;
+        audioSource = GetComponent<AudioSource>();
+        Cursor.lockState = CursorLockMode.Locked;
         GetComponent<MeshRenderer>().enabled = false;
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
 
@@ -201,7 +205,6 @@ public class PlayerController : Entity
 
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
         cam.transform.localPosition = Vector3.up * col.height - (Vector3.up * (baseColliderHeight - baseCamHeight)) + (Vector3.up * viewBobMagnitude);
-        Debug.Log($"{baseCamHeight} * ({col.height} / {baseColliderHeight}) + (Vector3.up * {viewBobMagnitude}) = {Vector3.up * baseCamHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude)}");
         hand.transform.localPosition = Vector3.up * baseHandHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude);
 
         if (canInteract)
@@ -366,6 +369,28 @@ public class PlayerController : Entity
         hidingSpot = null;
     }
 
+    public void Grabbed(Entity entity)
+    {
+        canMoveBody = false;
+        canInteract = false;
+        rb.isKinematic = true;
+        cam.enabled = false;
+        //transform.localPosition = Vector3.zero - (2 * Vector3.up * (transform.position.y + (cam.transform.position.y - transform.position.y)));
+        //transform.localRotation = Quaternion.identity;
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        cam.enabled = true;
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
+    }
+
 
     #region Input Handling Methods
     public void Movement(InputAction.CallbackContext context)
@@ -442,7 +467,7 @@ public class PlayerController : Entity
 
     public void Jaunt(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && canJaunt)
         {
             isJaunting = true;
             if (isCrouching)
@@ -493,4 +518,5 @@ public class PlayerController : Entity
         flashlightPickedUp = true;
     }
     #endregion
+
 }

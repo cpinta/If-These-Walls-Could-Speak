@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
+
 
 public class GM : MonoBehaviour
 {
@@ -36,12 +39,22 @@ public class GM : MonoBehaviour
     public List<int> clockSequence = new List<int>();
     int clockSequenceLength = 6;
 
+    public MapManager mapManager;
     public PlatePlacementManager platePlacementManager;
     public Radio radio;
+    [SerializeField] PlayerController player;
+    [SerializeField] Grandma grandma;
 
     public UnityEvent clockSolved;
     public UnityEvent onePlateCorrect;
+    public UnityEvent loadPhase1;
+    public UnityEvent loadPhase2;
 
+    [SerializeField] CutsceneManager cutsceneManager;
+    [SerializeField] TimelineAsset scenePlayerGrabbed;
+    [SerializeField] TimelineAsset sceneGrandmaInFridge1;
+    [SerializeField] TimelineAsset sceneGrandmaInFridge2;
+    [SerializeField] TimelineAsset scenePhase1_BackInTheRoom; 
     void Awake()
     {
         if (instance == null)
@@ -56,7 +69,10 @@ public class GM : MonoBehaviour
 
         radio = FindObjectOfType<Radio>();
 
+        cutsceneManager.cutsceneDone.AddListener(CutsceneFinished);
+
         StartGame();
+        LoadPhase1();
     }
 
     // Start is called before the first frame update
@@ -71,6 +87,16 @@ public class GM : MonoBehaviour
 
     }
 
+    public void PlayerGrabbed()
+    {
+        cutsceneManager.PlayCutscene(scenePlayerGrabbed);
+    }
+
+    public void MakePlayerSpeak(AudioClip clip)
+    {
+        player.PlaySound(clip);
+    }
+
     void StartGame()
     {
         safeAnswerIndex = Random.Range(0, GM.I.safePossibilites.Length);
@@ -79,6 +105,21 @@ public class GM : MonoBehaviour
 
         Debug.Log("Safe answer: " + safeAnswer);
         GenerateClockSequence();
+    }
+
+    public void ResetGame()
+    {
+        Entity[] entity = FindObjectsOfType<Entity>();
+        for(int i= 0; i < entity.Length; i++)
+        {
+            entity[i].ResetGame();
+        }
+
+        Interactable[] interactables = FindObjectsOfType<Interactable>();
+        for(int i= 0;i < interactables.Length; i++)
+        {
+            interactables[i].ResetGame();
+        }
     }
 
     void GenerateClockSequence()
@@ -114,5 +155,41 @@ public class GM : MonoBehaviour
             sequenceString += clockSequence[i] + " ";
         }
         Debug.Log("Clock Sequence set to: " + sequenceString);
+    }
+
+    public void LoadPhase1()
+    {
+        player.canJaunt = false;
+        grandma.DisableGrandma();
+        cutsceneManager.PlayCutscene(sceneGrandmaInFridge1);
+    }
+
+    public void Phase1_PlayerEnteredKitchen()
+    {
+        player.canJaunt = true;
+        cutsceneManager.PlayCutscene(sceneGrandmaInFridge2);
+    }
+
+    public void Phase1_BackInTheBedroom()
+    {
+        cutsceneManager.PlayCutscene(scenePhase1_BackInTheRoom);
+    }
+
+    void CutsceneFinished(PlayableAsset playableAsset)
+    {
+        if(playableAsset == sceneGrandmaInFridge1)
+        {
+
+        }
+        else if(playableAsset == sceneGrandmaInFridge2)
+        {
+            //grandma.SetTarget(player);
+            //grandma.ChangeState(GrandmaState.Chasing);
+            grandma.EnableGrandma();
+        }
+        else if(playableAsset == scenePhase1_BackInTheRoom)
+        {
+
+        }
     }
 }

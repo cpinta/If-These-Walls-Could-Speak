@@ -5,12 +5,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.HID;
 
-enum GrandmaState
+public enum GrandmaState
 {
     Dormant = 0,
     Wandering = 1,
     Standing = 2,
     Chasing = 3,
+    Grabbing = 4
 }
 
 enum CurrentDirection
@@ -30,7 +31,7 @@ public class Grandma : Entity
     GmaDestination destination;              //used when wandering around the house. Ignored if player is found
     [SerializeField] Transform face;
     NavMeshAgent navAgent;
-    Animator animator;
+    [SerializeField] Animator animator;
     AudioSource audioSource;
 
     RaycastHit hit;
@@ -58,6 +59,8 @@ public class Grandma : Entity
     float nextSpawnTimeMax = 30;
     float nextSpawnTimer = 0;
 
+    float grabbingDistance = 1f;
+
     private Coroutine coroutineFOVRoutine;
 
     Vector3 dormantPostion = new Vector3(0, -500, 0);
@@ -76,6 +79,9 @@ public class Grandma : Entity
     string PlayerLeaving = "Player Leaving";
     string Spawned = "Spawned";
 
+    public bool canWander = false;
+    public bool canSprint = false;
+
     [SerializeField] AudioClip[] acFootsteps;
 
     // Start is called before the first frame update
@@ -84,31 +90,32 @@ public class Grandma : Entity
         navAgent = GetComponent<NavMeshAgent>();
         destinations = FindObjectsOfType<GmaDestination>();
         potentialTargets = FindObjectsOfType<Entity>();
-        animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
         animator.applyRootMotion = true;
         navAgent.updatePosition = false;
         navAgent.updateRotation = true;
-        //ChangeState(GrandmaState.Standing);
+        ChangeState(GrandmaState.Standing);
 
-        for (int i = 0; i < destinations.Length; i++)
-        {
-            if(destinations[i].name == "Gma Destination Upstairs")
-            {
-                destination = destinations[i];
-                break;
-            }
-        }
-        gmaState = GrandmaState.Wandering;
-        navAgent.destination = destination.transform.position;
     }
 
+    public void EnableGrandma()
+    {
+        canWander = true;
+    }
 
+    public void DisableGrandma()
+    {
+        canWander = false;
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if (!canWander)
+        {
+            return;
+        }
         SyncAnimatorAndAgent();
         if (gmaState == GrandmaState.Standing || gmaState == GrandmaState.Wandering)
         {
@@ -180,6 +187,12 @@ public class Grandma : Entity
         if(gmaState == GrandmaState.Chasing)
         {
             navAgent.destination = target.transform.position;
+            if(navAgent.remainingDistance < grabbingDistance)
+            {
+                ChangeState(GrandmaState.Grabbing);
+                return;
+            }
+
             if (cantFindPlayerTimer > 0)
             {
                 Physics.Raycast(face.transform.position, target.transform.forward, out hit, sightDistance);
@@ -301,16 +314,20 @@ public class Grandma : Entity
 
     private void OnAnimatorMove()
     {
-        Vector3 rootPosition = animator.rootPosition;
-        rootPosition.y = navAgent.nextPosition.y;
-        transform.position = rootPosition;
-        navAgent.nextPosition = rootPosition;
+        if (canWander)
+        {
+            Vector3 rootPosition = animator.rootPosition;
+            rootPosition.y = navAgent.nextPosition.y;
+            transform.position = rootPosition;
+            navAgent.nextPosition = rootPosition;
+        }
     }
 
 
-    void ChangeState(GrandmaState state)
+    public void ChangeState(GrandmaState state)
     {
         gmaState = state;
+        Debug.Log("Changed Grandma state to "+state.ToString());
         switch (state)
         {
             case GrandmaState.Standing:
@@ -354,8 +371,13 @@ public class Grandma : Entity
                 navAgent.isStopped = false;
                 navAgent.destination = target.transform.position;
                 cantFindPlayerTimer = cantFindPlayerTime;
-                animator.SetBool("Sprint", true);
+                animator.SetBool("Sprint", canSprint);
                 PlayRandomSoundFromFolder(FoundPlayer, true);
+                break;
+            case GrandmaState.Grabbing:
+                GrabPlayer((PlayerController)target);
+                break;
+            default: 
                 break;
         }
     }
@@ -424,6 +446,11 @@ public class Grandma : Entity
         }
     }
 
+    public void SetTarget(Entity entity)
+    {
+        target = entity;
+    }
+
 
 
     void PlayerRaycast()
@@ -447,5 +474,28 @@ public class Grandma : Entity
     public void PlayFootStep()
     {
         audioSource.PlayOneShot(acFootsteps[Random.Range(0, acFootsteps.Length)]);
+    }
+
+    void GrabPlayer(PlayerController player)
+    {
+        player.Grabbed(this);
+        GM.I.PlayerGrabbed();
+        PlayRandomSoundFromFolder(KillingPlayer, true);
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+
+        //for (int i = 0; i < destinations.Length; i++)
+        //{
+        //    if (destinations[i].name == "Gma Destination Upstairs")
+        //    {
+        //        destination = destinations[i];
+        //        break;
+        //    }
+        //}
+        //gmaState = GrandmaState.Wandering;
+        //navAgent.destination = destination.transform.position;
     }
 }

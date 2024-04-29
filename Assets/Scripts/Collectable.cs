@@ -141,7 +141,10 @@ public abstract class Collectable : Interactable
 
     public override void ResetGame()
     {
+        base.ResetGame();
         transform.position = startingLocation;
         transform.rotation = startingRotation;
+        transform.parent = null;
+        Start();
     }
 }

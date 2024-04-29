@@ -224,4 +224,9 @@ public abstract class Entity : MonoBehaviour, IEntity
     {
 
     }
+
+    public virtual void ResetGame()
+    {
+
+    }
 }

@@ -5,12 +5,13 @@ using UnityEngine;
 public class Door : Interactable
 {
     Animator animator;
-    bool isOpen = false;
+    protected bool isOpen = false;
     bool initialLockState = false;
-    [SerializeField] bool locked = false;
+    [SerializeField] protected bool locked = false;
+    [SerializeField] bool initiallyOpen = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
@@ -20,6 +21,13 @@ public class Door : Interactable
             interactInput = false;
         }
         initialLockState = locked;
+
+        if(initiallyOpen)
+        {
+            animator.SetBool("Open", true);
+            isOpen = true;
+            animator.SetTrigger("InitiallyOpen");
+        }
     }
 
     // Update is called once per frame
@@ -44,13 +52,13 @@ public class Door : Interactable
         }
     }
 
-    void Unlock()
+    protected void Unlock()
     {
         locked = false;
         interactText = "Open";
     }
 
-    void ToggleOpenClose()
+    protected void ToggleOpenClose()
     {
         if(isOpen)
         {
@@ -62,7 +70,7 @@ public class Door : Interactable
         }
     }
 
-    void Open()
+    public void Open()
     {
         if (!isOpen)
         {
@@ -71,7 +79,7 @@ public class Door : Interactable
         }
     }
 
-    void Close()
+    public void Close()
     {
         if (isOpen)
         {
@@ -80,7 +88,7 @@ public class Door : Interactable
         }
     }
 
-    void Opened()
+    protected void Opened()
     {
         isOpen = true;
         interactText = "Close";
