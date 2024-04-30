@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-
+using UnityEngine.UI;
 
 public class GM : MonoBehaviour
 {
@@ -51,8 +51,11 @@ public class GM : MonoBehaviour
     public UnityEvent loadPhase1;
     public UnityEvent loadPhase2;
 
+    [SerializeField] GameObject uiBlackScreen;
+
     [SerializeField] CutsceneManager cutsceneManager;
     [SerializeField] TimelineAsset scenePlayerGrabbed;
+    [SerializeField] TimelineAsset scenePhase1_WokeUp;
     [SerializeField] TimelineAsset sceneGrandmaInFridge1;
     [SerializeField] TimelineAsset sceneGrandmaInFridge2;
     [SerializeField] TimelineAsset scenePhase1_BackInTheRoom; 
@@ -100,6 +103,7 @@ public class GM : MonoBehaviour
 
     void StartGame()
     {
+        uiBlackScreen.SetActive(false);
         safeAnswerIndex = Random.Range(0, GM.I.safePossibilites.Length);
         safeAnswer = safePossibilites[safeAnswerIndex];
         radio.SetAnswer(safeAnswerRadio[safeAnswerIndex]);
@@ -162,7 +166,7 @@ public class GM : MonoBehaviour
     {
         player.canJaunt = false;
         grandma.DisableGrandma();
-        cutsceneManager.PlayCutscene(sceneGrandmaInFridge1);
+        cutsceneManager.PlayCutscene(scenePhase1_WokeUp);
         AddMessageToFridge("luv u sweetie");
         player.canInteract = false;
     }
@@ -185,7 +189,11 @@ public class GM : MonoBehaviour
 
     void CutsceneFinished(PlayableAsset playableAsset)
     {
-        if(playableAsset == sceneGrandmaInFridge1)
+        if(playableAsset == scenePhase1_WokeUp)
+        {
+            cutsceneManager.PlayCutscene(sceneGrandmaInFridge1);
+        }
+        else if(playableAsset == sceneGrandmaInFridge1)
         {
 
         }

@@ -335,7 +335,7 @@ public class Grandma : Entity
                 standingTimer = Random.Range(standingTimeMin, standingTimeMax);
                 navAgent.isStopped = true;
                 animator.SetBool("Sprint", false);
-                if(!firstStateAfterSpawn)
+                if(firstStateAfterSpawn)
                 {
                     PlayRandomSoundFromFolder(LookingForPlayer, true);
                 }

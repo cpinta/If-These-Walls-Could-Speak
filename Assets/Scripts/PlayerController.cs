@@ -387,6 +387,7 @@ public class PlayerController : Entity
 
     public void PlaySound(AudioClip clip)
     {
+        audioSource.volume = 2;
         audioSource.clip = clip;
         audioSource.Play();
     }
