@@ -20,6 +20,7 @@ public class AudioInteractable : Interactable
     void Start()
     {
         base.Start();
+        interactText = "Inspect";
     }
 
     // Update is called once per frame

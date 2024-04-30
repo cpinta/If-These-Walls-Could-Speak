@@ -58,7 +58,15 @@ public class GM : MonoBehaviour
     [SerializeField] TimelineAsset scenePhase1_WokeUp;
     [SerializeField] TimelineAsset sceneGrandmaInFridge1;
     [SerializeField] TimelineAsset sceneGrandmaInFridge2;
-    [SerializeField] TimelineAsset scenePhase1_BackInTheRoom; 
+    [SerializeField] TimelineAsset scenePhase1_BackInTheRoom;
+    [SerializeField] TimelineAsset sceneLightsOff;
+
+    [SerializeField] GameObject phase2Colliders;
+    [SerializeField] Light[] lights;
+
+
+    bool despawningGrandma = false;
+    float grandmaDespawnTimer = 5;
     void Awake()
     {
         if (instance == null)
@@ -88,12 +96,24 @@ public class GM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (despawningGrandma)
+        {
+            if (grandmaDespawnTimer > 0)
+            {
+                grandmaDespawnTimer -= Time.deltaTime;
+            }
+            else
+            {
+                despawningGrandma = false;
+                DisableGrandma();
+            }
+        }
     }
 
     public void PlayerGrabbed()
     {
         cutsceneManager.PlayCutscene(scenePlayerGrabbed);
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void MakePlayerSpeak(AudioClip clip)
@@ -162,24 +182,36 @@ public class GM : MonoBehaviour
         Debug.Log("Clock Sequence set to: " + sequenceString);
     }
 
+    public void LoadPhase2()
+    {
+        phase2Colliders.SetActive(true);
+    }
+
     public void LoadPhase1()
     {
+        phase2Colliders.SetActive(false);
         player.canJaunt = false;
         grandma.DisableGrandma();
         cutsceneManager.PlayCutscene(scenePhase1_WokeUp);
         AddMessageToFridge("luv u sweetie");
-        player.canInteract = false;
+        //player.canInteract = false;
+        player.canInteract = true;
+        player.SetSpeed(2);
     }
 
     public void Phase1_PlayerEnteredKitchen()
     {
         player.canJaunt = true;
         cutsceneManager.PlayCutscene(sceneGrandmaInFridge2);
+        player.ResetSpeed();
     }
 
     public void Phase1_BackInTheBedroom()
     {
         cutsceneManager.PlayCutscene(scenePhase1_BackInTheRoom);
+        grandma.SetCanSprint(true);
+        despawningGrandma = true;
+        grandmaDespawnTimer = 1.5f;
     }
 
     public void DisableGrandma()
@@ -206,14 +238,37 @@ public class GM : MonoBehaviour
         else if(playableAsset == scenePhase1_BackInTheRoom)
         {
             cutsceneManager.StopCutscene();
-            DisableGrandma();
             AddMessageToFridge("u must escape");
             player.canInteract = true;
+            LoadPhase2();
         }
     }
 
     public void AddMessageToFridge(string message)
     {
         fridgeLetterManager.AddMessageToQueue(message);
+    }
+
+    public void CutsceneTurnOffLights()
+    {
+        cutsceneManager.PlayCutscene(sceneLightsOff);
+        TurnOffLights();
+    }
+
+    public void TurnOffLights()
+    {
+        for(int i=0; i < lights.Length; i++)
+        {
+            lights[i].enabled = false;
+
+        }
+    }
+    public void TurnOnLights()
+    {
+        for (int i = 0; i < lights.Length; i++)
+        {
+            lights[i].enabled = true;
+
+        }
     }
 }

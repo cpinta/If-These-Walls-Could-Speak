@@ -12,9 +12,9 @@ public class Sledgehammer : Collectable
     void Start()
     {
         base.Start();
-        handScale = Vector3.one * 100;
-        handRotation = new Vector3(-96, 0, 90);
-        handPosition = new Vector3(0, -0.29f, 0);
+        handScale = Vector3.one;
+        handRotation = new Vector3(25.8f, 90, -15);
+        handPosition = new Vector3(-0.38f, -0.29f, 0.12f);
         interactText = "Pickup";
         animator = GetComponent<Animator>();
         trigger.TriggerEntered.AddListener(Hit);

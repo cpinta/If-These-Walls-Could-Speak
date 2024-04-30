@@ -17,6 +17,7 @@ public class PlayerController : Entity
     InputAction action;
     public TMP_Text centerText;
     [SerializeField] Light flashlight;
+    [SerializeField] Light pointLight;
     bool flashlightPickedUp = false;
     AudioSource audioSource;
 
@@ -30,7 +31,7 @@ public class PlayerController : Entity
     [SerializeField] int hidingFreeCameraAngle = 15;
     bool camWasMovedLastUpdate = false;
     float baseCamHeight = 0.6f;
-    float baseHandHeight = 0.25f;
+    float baseHandHeight = 0.2f;
     [SerializeField] float yMousePromptOffset = 4;
 
     Vector3 viewBobStart = Vector3.zero;
@@ -40,7 +41,8 @@ public class PlayerController : Entity
 
     //Player Variables
     float currentSpeed = 0;
-    [SerializeField] float playerSpeed = 10;
+    [SerializeField] float initialPlayerSpeed = 4;
+    [SerializeField] float playerSpeed = 4;
     [SerializeField] float playerJauntMovementMultiplier = 1.2f;
     [SerializeField] float playerCrouchMovementMultiplier = 0.75f;
     [SerializeField] float playerCrouchLerp = 0.8f;
@@ -71,6 +73,7 @@ public class PlayerController : Entity
         customHide = true;
 
         flashlight.enabled = false;
+        pointLight.enabled = true;
     }
 
     // Update is called once per frame
@@ -205,7 +208,7 @@ public class PlayerController : Entity
 
         col.center = Vector3.zero - (Vector3.up * ((2 - col.height) / 2));
         cam.transform.localPosition = Vector3.up * col.height - (Vector3.up * (baseColliderHeight - baseCamHeight)) + (Vector3.up * viewBobMagnitude);
-        hand.transform.localPosition = Vector3.up * baseHandHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude);
+        hand.transform.localPosition = Vector3.up * baseHandHeight * (col.height / baseColliderHeight) + (Vector3.up * viewBobMagnitude) + (Vector3.right * 0.25f) + (Vector3.forward * 0.3f);
 
         if (canInteract)
         {
@@ -225,6 +228,16 @@ public class PlayerController : Entity
     Vector3 MouseScreenPosition()
     {
         return Mouse.current.position.value - (Screen.width / 2 * Vector2.right) - (Screen.height / 2 * Vector2.up);
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        playerSpeed = newSpeed;
+    }
+
+    public void ResetSpeed()
+    {
+        playerSpeed = initialPlayerSpeed;
     }
 
     void InteractRaycast()

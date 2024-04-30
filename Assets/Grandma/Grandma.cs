@@ -323,6 +323,12 @@ public class Grandma : Entity
         }
     }
 
+    public void SetCanSprint(bool canSprint)
+    {
+        this.canSprint = canSprint;
+        animator.SetBool("Sprint", canSprint);
+    }
+
 
     public void ChangeState(GrandmaState state)
     {
