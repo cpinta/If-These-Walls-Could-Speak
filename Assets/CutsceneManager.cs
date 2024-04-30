@@ -49,4 +49,10 @@ public class CutsceneManager : MonoBehaviour
     {
         cutsceneDone.Invoke(director.playableAsset);
     }
+
+    public void StopCutscene()
+    {
+        director.Stop();
+        director.playableAsset = null;
+    }
 }

@@ -5,15 +5,19 @@ using UnityEngine;
 public class Book : Collectable
 {
     Animator animator;
+    AudioSource audioSource;
     Rigidbody rb;
     bool isOpen = false;
     Transform parent;
+
+    [SerializeField] AudioClip fallSound;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody>();
         handRotation = new Vector3(-42, -138, 0);
         handPosition = new Vector3(0, 0.1f, 0);
@@ -113,5 +117,7 @@ public class Book : Collectable
     {
         collider.enabled = true;
         transform.parent = null;
+        audioSource.clip = fallSound;
+        audioSource.Play();
     }
 }

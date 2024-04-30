@@ -28,5 +28,6 @@ public class Phase1_BackInTheBedroomOneTimeAudio : OneTimeAudio
     protected override void TriggerActivated()
     {
         GM.I.Phase1_BackInTheBedroom();
+        GM.I.DisableGrandma();
     }
 }

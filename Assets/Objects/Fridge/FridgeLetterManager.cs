@@ -15,7 +15,7 @@ public class FridgeLetterManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPhrase("brug and spagh");
+
     }
 
     // Update is called once per frame
@@ -54,6 +54,7 @@ public class FridgeLetterManager : MonoBehaviour
                 cursorLocation = new Vector3(lettersXLimits.x, cursorLocation.y - lineSpacing, 0);
             }
             cursorLocation = SpawnWord(strings[i], cursorLocation);
+            cursorLocation += Vector3.right * letterSpacing*2;
         }
     }
 
@@ -73,8 +74,11 @@ public class FridgeLetterManager : MonoBehaviour
     public void DisplayLatestQueueInMessage()
     {
         ClearCurrentMessage();
-        SpawnPhrase(messageQueue[0]);
-        messageQueue.RemoveAt(0);
+        if(messageQueue.Count > 0)
+        {
+            SpawnPhrase(messageQueue[0]);
+            messageQueue.RemoveAt(0);
+        }
     }
 
 }

@@ -41,6 +41,7 @@ public class GM : MonoBehaviour
 
     public MapManager mapManager;
     public PlatePlacementManager platePlacementManager;
+    public FridgeLetterManager fridgeLetterManager;
     public Radio radio;
     [SerializeField] PlayerController player;
     [SerializeField] Grandma grandma;
@@ -162,6 +163,8 @@ public class GM : MonoBehaviour
         player.canJaunt = false;
         grandma.DisableGrandma();
         cutsceneManager.PlayCutscene(sceneGrandmaInFridge1);
+        AddMessageToFridge("luv u sweetie");
+        player.canInteract = false;
     }
 
     public void Phase1_PlayerEnteredKitchen()
@@ -173,6 +176,11 @@ public class GM : MonoBehaviour
     public void Phase1_BackInTheBedroom()
     {
         cutsceneManager.PlayCutscene(scenePhase1_BackInTheRoom);
+    }
+
+    public void DisableGrandma()
+    {
+        grandma.ChangeState(GrandmaState.Dormant);
     }
 
     void CutsceneFinished(PlayableAsset playableAsset)
@@ -189,7 +197,15 @@ public class GM : MonoBehaviour
         }
         else if(playableAsset == scenePhase1_BackInTheRoom)
         {
-
+            cutsceneManager.StopCutscene();
+            DisableGrandma();
+            AddMessageToFridge("u must escape");
+            player.canInteract = true;
         }
+    }
+
+    public void AddMessageToFridge(string message)
+    {
+        fridgeLetterManager.AddMessageToQueue(message);
     }
 }

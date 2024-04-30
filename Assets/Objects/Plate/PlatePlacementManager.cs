@@ -16,6 +16,8 @@ public class PlatePlacementManager : MonoBehaviour
 
     List<PlatePlacement> platePlacements = new List<PlatePlacement>();
 
+    bool firstPlatePlaced = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +58,14 @@ public class PlatePlacementManager : MonoBehaviour
                 GM.I.onePlateCorrect.Invoke();
             }
         }
+        else
+        {
+            if(!firstPlatePlaced)
+            {
+                GM.I.AddMessageToFridge("check time to set table");
+            }
+            firstPlatePlaced = true;
+        }
     }
 
     public bool CheckAnswer()
@@ -72,5 +82,10 @@ public class PlatePlacementManager : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void ResetGame()
+    {
+        firstPlatePlaced = false;
     }
 }

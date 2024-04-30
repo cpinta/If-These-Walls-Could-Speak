@@ -38,6 +38,7 @@ public class BookAnimationParent : MonoBehaviour
                 animator.SetTrigger("Fall");
                 activated = true;
                 collider.enabled = false;
+                GM.I.AddMessageToFridge("book n radio is key");
             }
         }
     }

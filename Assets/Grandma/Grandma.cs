@@ -331,6 +331,7 @@ public class Grandma : Entity
         switch (state)
         {
             case GrandmaState.Standing:
+                canWander = true;
                 standingTimer = Random.Range(standingTimeMin, standingTimeMax);
                 navAgent.isStopped = true;
                 animator.SetBool("Sprint", false);
@@ -341,6 +342,7 @@ public class Grandma : Entity
                 firstStateAfterSpawn = false;
                 break;
             case GrandmaState.Wandering:
+                canWander = true;
                 navAgent.isStopped = false;
                 if(destination == null)
                 {
@@ -362,12 +364,14 @@ public class Grandma : Entity
                 animator.SetBool("Sprint", false);
                 break;
             case GrandmaState.Dormant:
+                canWander = false;
                 navAgent.isStopped = true;
                 transform.position = dormantPostion;
                 nextSpawnTimer = Random.Range(nextSpawnTimeMin, nextSpawnTimeMax);
                 animator.SetBool("Sprint", false);
                 break;
             case GrandmaState.Chasing:
+                canWander = true;
                 navAgent.isStopped = false;
                 navAgent.destination = target.transform.position;
                 cantFindPlayerTimer = cantFindPlayerTime;

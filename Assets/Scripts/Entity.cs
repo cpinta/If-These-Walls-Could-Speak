@@ -24,7 +24,7 @@ public abstract class Entity : MonoBehaviour, IEntity
     public Transform hand;
     protected bool canMoveBody = true;
     protected bool canMoveCamera = true;
-    protected bool canInteract = true;
+    public bool canInteract = true;
     [SerializeField] protected float hideLerp = 6f;
     protected bool customHide = false;
     protected float viewRadius = 10;

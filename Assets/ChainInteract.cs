@@ -12,6 +12,7 @@ public class ChainInteract : Interactable
         if(!hasBeenInteractedWith)
         {
             GM.I.MakePlayerSpeak(clip);
+            GM.I.AddMessageToFridge("get the key to his room");
             hasBeenInteractedWith = true;
         }
     }
@@ -25,6 +26,7 @@ public class ChainInteract : Interactable
     void Start()
     {
         hasBeenInteractedWith = false;
+        interactText = "Interact";
     }
 
     // Update is called once per frame
