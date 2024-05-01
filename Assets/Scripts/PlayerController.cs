@@ -489,6 +489,10 @@ public class PlayerController : Entity
 
     public void Crouch(InputAction.CallbackContext context)
     {
+        if (true)   //crouching is not meant to work and might be breaking stuff lol
+        {
+            return;
+        }
         if (context.performed)
         {
             isCrouching = true;
