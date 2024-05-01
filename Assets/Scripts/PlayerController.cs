@@ -390,6 +390,22 @@ public class PlayerController : Entity
         hidingSpot = null;
     }
 
+    public void Respawn()
+    {
+        canMoveBody = true;
+        canInteract = true;
+        cam.enabled = true;
+        rb.isKinematic = false;
+        hidingSpot = null;
+
+        isHiding = false;
+        moveCamera = true;
+        forcedToHide = false;
+
+        col.enabled = true;
+        canMoveCamera = true;
+    }
+
     public void Grabbed(Entity entity)
     {
         canMoveBody = false;

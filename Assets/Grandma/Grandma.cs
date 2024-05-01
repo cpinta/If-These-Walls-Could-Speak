@@ -52,7 +52,7 @@ public class Grandma : Entity
     float destinationArrivedDistance = 2;
     bool wanderingAtDestination = false;
 
-    float wanderingOutOfSightTime = 3;
+    float wanderingOutOfSightTime = 10;
     float wanderingOutOfSightTimer = 0;
 
     float nextSpawnTimeMin = 10;
@@ -67,6 +67,10 @@ public class Grandma : Entity
 
     [SerializeField] float groundRaycastOffset;
     [SerializeField] float groundRaycastDistance;
+
+
+    float seenToStartChasingTime = 1;
+    float seenToStartChasingTimer = 0;
 
 
     private Vector2 velocity;
@@ -102,6 +106,11 @@ public class Grandma : Entity
     public void EnableGrandma()
     {
         canWander = true;
+        wanderingOutOfSightTimer = 10;
+        if (coroutineFOVRoutine == null)
+        {
+            coroutineFOVRoutine = StartCoroutine(FOVRoutine());
+        }
     }
 
     public void DisableGrandma()
@@ -124,9 +133,22 @@ public class Grandma : Entity
                 coroutineFOVRoutine = StartCoroutine(FOVRoutine());
             }
 
+            bool wasHit = false;
             RaycastHit wanderingHit;
             Physics.Raycast(transform.position, potentialTargets[0].transform.position, out wanderingHit);
             if(wanderingHit.collider == null)
+            {
+                wasHit = true;
+            }
+            else
+            {
+                if(wanderingHit.collider.name != "Player (PlayerController)")
+                {
+                    wasHit = true;
+                }
+            }
+
+            if(wasHit)
             {
                 if (wanderingOutOfSightTimer > 0)
                 {
@@ -157,6 +179,11 @@ public class Grandma : Entity
 
         if (gmaState == GrandmaState.Wandering)
         {
+            if (destination == null)
+            {
+                ChangeState(GrandmaState.Standing);
+                return;
+            }
             float distanceToDestination = Vector3.Distance(transform.position, destination.transform.position);
             if (distanceToDestination > destinationArrivedDistance)
             {
@@ -186,6 +213,11 @@ public class Grandma : Entity
 
         if(gmaState == GrandmaState.Chasing)
         {
+            if(target == null)
+            {
+                ChangeState(GrandmaState.Standing);
+                return;
+            }
             navAgent.destination = target.transform.position;
             if(navAgent.remainingDistance < grabbingDistance)
             {
@@ -205,24 +237,25 @@ public class Grandma : Entity
                     }
                     else
                     {
-                        cantFindPlayerTime -= Time.deltaTime;
+                        cantFindPlayerTimer -= Time.deltaTime;
                     }
                 }
                 else
                 {
                     Debug.DrawRay(face.transform.position, target.transform.position, Color.red);
-                    cantFindPlayerTime -= Time.deltaTime;
+                    cantFindPlayerTimer -= Time.deltaTime;
                 }
             }
             else
             {
-                gmaState = GrandmaState.Wandering;
+                ChangeState(GrandmaState.Wandering);
             }
         }
 
         if(gmaState == GrandmaState.Dormant)
         {
             transform.position = dormantPostion;
+            animator.SetBool("Dormant", true);
             if (nextSpawnTimer > 0)
             {
                 nextSpawnTimer -= Time.deltaTime;
@@ -236,6 +269,8 @@ public class Grandma : Entity
 
     void StartLurking()
     {
+        wanderingOutOfSightTimer = 5;
+        animator.SetBool("Dormant", false);
         destination = destinations[Random.Range(0, destinations.Length)];
 
         //checking which destinations the player can see. If they cant see it, Grandma will spawn there
@@ -282,6 +317,11 @@ public class Grandma : Entity
         PlayRandomSoundFromFolder(Spawned, true);
     }
 
+    public void GameStart()
+    {
+        animator.SetBool("GameStart", true);
+    }
+
     void SyncAnimatorAndAgent()
     {
         Vector3 worldDeltaPosition = navAgent.nextPosition - transform.position;
@@ -302,7 +342,7 @@ public class Grandma : Entity
 
         bool shouldMove = velocity.magnitude > 0.5f && navAgent.remainingDistance > navAgent.stoppingDistance;
 
-        animator.SetBool("Move", shouldMove);
+        animator.SetBool("Move", shouldMove && canWander);
         animator.SetFloat("Locomotion", velocity.magnitude);
 
         float deltaMagnitude = worldDeltaPosition.magnitude;
@@ -337,7 +377,6 @@ public class Grandma : Entity
         switch (state)
         {
             case GrandmaState.Standing:
-                canWander = true;
                 standingTimer = Random.Range(standingTimeMin, standingTimeMax);
                 navAgent.isStopped = true;
                 animator.SetBool("Sprint", false);
@@ -348,7 +387,6 @@ public class Grandma : Entity
                 firstStateAfterSpawn = false;
                 break;
             case GrandmaState.Wandering:
-                canWander = true;
                 navAgent.isStopped = false;
                 if(destination == null)
                 {
@@ -370,14 +408,12 @@ public class Grandma : Entity
                 animator.SetBool("Sprint", false);
                 break;
             case GrandmaState.Dormant:
-                canWander = false;
                 navAgent.isStopped = true;
                 transform.position = dormantPostion;
                 nextSpawnTimer = Random.Range(nextSpawnTimeMin, nextSpawnTimeMax);
                 animator.SetBool("Sprint", false);
                 break;
             case GrandmaState.Chasing:
-                canWander = true;
                 navAgent.isStopped = false;
                 navAgent.destination = target.transform.position;
                 cantFindPlayerTimer = cantFindPlayerTime;
@@ -450,10 +486,26 @@ public class Grandma : Entity
             target = FieldOfViewCheck();
             if (target != null)
             {
-                ChangeState(GrandmaState.Chasing);
-                break;
+                if (!target.isHiding)
+                {
+                    if(seenToStartChasingTimer > 0)
+                    {
+                        seenToStartChasingTimer -= checkFOVeverySecs;
+                    }
+                    else
+                    {
+                        ChangeState(GrandmaState.Chasing);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                seenToStartChasingTimer = seenToStartChasingTime;
             }
         }
+
+        coroutineFOVRoutine = null;
     }
 
     public void SetTarget(Entity entity)
@@ -489,6 +541,7 @@ public class Grandma : Entity
     void GrabPlayer(PlayerController player)
     {
         player.Grabbed(this);
+        animator.SetBool("GameStart", false);
         GM.I.PlayerGrabbed();
         PlayRandomSoundFromFolder(KillingPlayer, true);
     }

@@ -10,7 +10,8 @@ public class MapManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GM.I.loadPhase1.AddListener(EnablePhase1);
+        GM.I.loadPhase2.AddListener(EnablePhase2);
     }
 
     // Update is called once per frame

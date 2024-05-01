@@ -23,6 +23,7 @@ public class DiningRoomDoor : Door
     {
         locked = false;
         isOpen = false;
+
         Open();
     }
 }

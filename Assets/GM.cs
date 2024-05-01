@@ -67,6 +67,13 @@ public class GM : MonoBehaviour
 
     [SerializeField] Sledgehammer sledgehammer;
 
+    [SerializeField] GameObject gameOverScreen;
+    [SerializeField] Camera playerGrabCamera;
+
+    [SerializeField] OneTimeAudio[] oneTimeAudios;
+
+    int phase = 1;
+
 
     bool despawningGrandma = false;
     float grandmaDespawnTimer = 5;
@@ -88,6 +95,7 @@ public class GM : MonoBehaviour
 
         StartGame();
         LoadPhase1();
+        oneTimeAudios = FindObjectsByType<OneTimeAudio>(FindObjectsSortMode.None);
     }
 
     // Start is called before the first frame update
@@ -188,6 +196,37 @@ public class GM : MonoBehaviour
     public void LoadPhase2()
     {
         phase2Colliders.SetActive(true);
+        loadPhase2.Invoke();
+        phase = 2;
+    }
+
+    public void RespawnPlayer()
+    {
+        playerGrabCamera.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        cutsceneManager.StopCutscene();
+        gameOverScreen.SetActive(false);
+        player.Respawn();
+
+        for(int i =0; i < oneTimeAudios.Length; i++)
+        {
+            oneTimeAudios[i].ResetGame();
+        }
+
+        if (phase == 1)
+        {
+            LoadPhase1();
+            grandma.transform.position = new Vector3(-6.335f, 0.136f, 1.766f);
+            grandma.ChangeState(GrandmaState.Standing);
+        }
+        if(phase == 2)
+        {
+            LoadPhase2();
+            grandma.ChangeState(GrandmaState.Dormant);
+        }
+        player.transform.position = new Vector3(-8.345f, 1.017f, 20.764f);
+        player.transform.rotation = Quaternion.Euler(new Vector3(0, 235, 0));
+
     }
 
     public void LoadPhase1()
@@ -197,14 +236,16 @@ public class GM : MonoBehaviour
         grandma.DisableGrandma();
         cutsceneManager.PlayCutscene(scenePhase1_WokeUp);
         AddMessageToFridge("luv u sweetie");
-        //player.canInteract = false;
-        player.canInteract = true;
+        player.canInteract = false;
+        //player.canInteract = true;
         player.SetSpeed(2);
+        loadPhase1.Invoke();
     }
 
     public void Phase1_PlayerEnteredKitchen()
     {
         player.canJaunt = true;
+        grandma.GameStart();
         cutsceneManager.PlayCutscene(sceneGrandmaInFridge2);
         player.ResetSpeed();
     }

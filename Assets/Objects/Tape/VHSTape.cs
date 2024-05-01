@@ -7,6 +7,7 @@ public class VHSTape : Collectable
 {
     VideoClip vcStatic;
     VideoClip vcGrandpa;
+    [SerializeField] AudioClip clip;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,7 @@ public class VHSTape : Collectable
 
     public override void Equip(Entity entity)
     {
-
+        GM.I.MakePlayerSpeak(clip);
     }
 
     public override void IsHovering(bool isHovering, Entity entity)

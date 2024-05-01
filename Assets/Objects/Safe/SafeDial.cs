@@ -22,7 +22,7 @@ public class SafeDial : Clickable
     {
         base.Start();
         interactText = "Spin";
-        Debug.Log(transform.rotation);
+        //Debug.Log(transform.rotation);
         destination = transform.localRotation;
         origin = transform.localRotation;
         audioSource = GetComponent<AudioSource>();

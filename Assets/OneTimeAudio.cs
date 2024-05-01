@@ -41,4 +41,9 @@ public class OneTimeAudio : MonoBehaviour
     {
 
     }
+
+    public virtual void ResetGame()
+    {
+        wasActived = false;
+    }
 }

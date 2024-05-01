@@ -28,4 +28,10 @@ public class EndOfHallwayOneTimeAudio : OneTimeAudio
         backInRoomCollider.gameObject.SetActive(true);
         GM.I.Phase1_PlayerEnteredKitchen();
     }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        backInRoomCollider.gameObject.SetActive(false);
+    }
 }

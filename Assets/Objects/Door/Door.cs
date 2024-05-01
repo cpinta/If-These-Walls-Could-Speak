@@ -29,6 +29,8 @@ public class Door : Interactable
             isOpen = true;
             animator.SetTrigger("InitiallyOpen");
         }
+
+        GM.I.loadPhase1.AddListener(ResetGame);
     }
 
     // Update is called once per frame
@@ -120,11 +122,20 @@ public class Door : Interactable
 
     public override void ResetGame()
     {
-        if (isOpen)
+        if (initiallyOpen)
         {
-            Close();
-            isOpen = false;
-            interactText = "Open";
+            animator.SetBool("Open", true);
+            isOpen = true;
+            animator.SetTrigger("InitiallyOpen");
+        }
+        else
+        {
+            if (isOpen)
+            {
+                Close();
+                isOpen = false;
+                interactText = "Open";
+            }
         }
         locked = initialLockState;
     }

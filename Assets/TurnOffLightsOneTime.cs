@@ -25,4 +25,10 @@ public class TurnOffLightsOneTime : OneTimeAudio
     {
         GM.I.CutsceneTurnOffLights();
     }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+        GM.I.TurnOnLights();
+    }
 }
