@@ -67,6 +67,22 @@ public class TV : CameraSpot
         }
     }
 
+    public override void Hide(Entity entity)
+    {
+        Debug.Log("Camera snapped to: " + name);
+        usedToHide = true;
+        collider.enabled = false;
+        if (isCursorLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        entity.Hide(this, false, true);
+    }
+
     public override void ResetGame()
     {
         animator.SetBool("Open", false);

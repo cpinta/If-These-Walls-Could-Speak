@@ -36,7 +36,7 @@ public class CameraSpot : HidingSpot
         {
             Cursor.lockState = CursorLockMode.None;
         }
-        entity.Hide(this, false, true);
+        entity.Hide(this, false, false);
     }
 
     public override void UnHide()

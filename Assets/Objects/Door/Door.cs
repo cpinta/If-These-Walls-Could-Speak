@@ -137,6 +137,6 @@ public class Door : Interactable
                 interactText = "Open";
             }
         }
-        locked = initialLockState;
+        //locked = initialLockState;
     }
 }
