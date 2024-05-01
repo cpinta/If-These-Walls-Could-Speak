@@ -281,12 +281,16 @@ public class GM : MonoBehaviour
     public void OutroTapePlaying(CameraSpot cameraSpot)
     {
         player.Hide(cameraSpot, false, true);
+        player.pointLight.enabled = false;
+        player.flashlight.enabled = false;
     }
 
     public void OutroTapeDone()
     {
         player.StartExitingHide();
         sledgehammer.Fall();
+        player.pointLight.enabled = true;
+        player.flashlight.enabled = true;
     }
 
     public void EndGame()

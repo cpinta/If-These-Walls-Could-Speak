@@ -24,6 +24,6 @@ public class Chain : MonoBehaviour
         {
             doors[i].ForceOpen();
         }
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 }

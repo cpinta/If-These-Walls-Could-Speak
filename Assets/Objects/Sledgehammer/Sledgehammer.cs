@@ -7,6 +7,7 @@ public class Sledgehammer : Collectable
     Animator animator;
     [SerializeField] ChildTrigger trigger;
     Entity holder;
+    [SerializeField] AudioClip clip;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +35,7 @@ public class Sledgehammer : Collectable
 
     public override void Equip(Entity entity)
     {
+        GM.I.MakePlayerSpeak(clip);
         holder = entity;
         animator.SetBool("InHand", true);
     }

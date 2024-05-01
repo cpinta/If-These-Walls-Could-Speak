@@ -83,7 +83,7 @@ public class TV : CameraSpot
         if (playingOutro)
         {
             GM.I.OutroTapeDone();
-            audioSource.volume = 0.1f;
+            //audioSource.volume = 0.1f;
             videoPlayer.Stop();
             videoPlayer.clip = staticVideo;
             videoPlayer.Play();

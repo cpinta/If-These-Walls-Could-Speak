@@ -16,8 +16,8 @@ public class PlayerController : Entity
     [SerializeField] Camera cam;
     InputAction action;
     public TMP_Text centerText;
-    [SerializeField] Light flashlight;
-    [SerializeField] Light pointLight;
+    [SerializeField] public Light flashlight;
+    [SerializeField] public Light pointLight;
     bool flashlightPickedUp = false;
     AudioSource audioSource;
 

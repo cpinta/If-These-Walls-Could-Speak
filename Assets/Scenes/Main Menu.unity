@@ -552,6 +552,8 @@ MonoBehaviour:
   canvasUIBackground: {fileID: 1314725350}
   canvasSkipUI: {fileID: 1935804909}
   scrollbarSkip: {fileID: 542812143}
+  sceneGame:
+    m_Handle: 0
 --- !u!4 &347655505
 Transform:
   m_ObjectHideFlags: 0
@@ -767,8 +769,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: If These Walls Could Speak
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d01024a901f96f346b0bdfd341be476b, type: 2}
-  m_sharedMaterial: {fileID: -7386131993458598143, guid: d01024a901f96f346b0bdfd341be476b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 15b5a630da18cb14a9e4080289920e19, type: 2}
+  m_sharedMaterial: {fileID: -4640270826875957580, guid: 15b5a630da18cb14a9e4080289920e19, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
