@@ -11,6 +11,7 @@ public class Book : Collectable
     Transform parent;
 
     [SerializeField] AudioClip fallSound;
+    [SerializeField] AudioClip talking;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -90,6 +91,7 @@ public class Book : Collectable
 
     public override void Equip(Entity entity)
     {
+        GM.I.MakePlayerSpeak(talking);
         isOpen = false;
         Open();
     }

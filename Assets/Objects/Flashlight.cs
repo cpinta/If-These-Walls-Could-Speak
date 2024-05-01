@@ -18,6 +18,7 @@ public class Flashlight : Interactable
     // Start is called before the first frame update
     void Start()
     {
+        base.Start();
         interactText = "Pick up";
     }
 
@@ -74,6 +75,7 @@ public class Flashlight : Interactable
     {
         if(entity is PlayerController)
         {
+            collider.enabled = false;
             PlayerController player = entity as PlayerController;
             player.FlashLightPickup();
             HandDestination(player.transform);

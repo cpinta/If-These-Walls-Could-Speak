@@ -290,6 +290,7 @@ public class Grandma : Entity
             return;
         }
         destination = potentialDests[Random.Range(0, potentialDests.Count)];
+        transform.position = destination.transform.position;
 
         // 50/50 if going clockwise or not
         if (Random.value > 0.5f)                    //Going clockwise

@@ -318,12 +318,13 @@ public class GM : MonoBehaviour
 
 
 
-
     public void OutroTapePlaying(CameraSpot cameraSpot)
     {
         player.Hide(cameraSpot, false, true);
         player.pointLight.enabled = false;
         player.flashlight.enabled = false;
+        DisableGrandma();
+        grandma.canWander = false;
     }
 
     public void OutroTapeDone()
@@ -332,6 +333,7 @@ public class GM : MonoBehaviour
         sledgehammer.Fall();
         player.pointLight.enabled = true;
         player.flashlight.enabled = true;
+        grandma.canWander = true;
     }
 
     public void EndGame()
