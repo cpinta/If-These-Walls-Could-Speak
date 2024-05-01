@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Chain : MonoBehaviour
 {
+    [SerializeField] DoubleDoor[] doors;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,10 @@ public class Chain : MonoBehaviour
 
     public void Break()
     {
+        for(int i = 0; i < doors.Length; i++)
+        {
+            doors[i].ForceOpen();
+        }
         Destroy(this);
     }
 }

@@ -8,6 +8,7 @@ public class ChildTrigger : MonoBehaviour
     public UnityEvent<Collider> TriggerEntered;
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Child trigger triggered on " + other.name);
         TriggerEntered.Invoke(other);
     }
 }

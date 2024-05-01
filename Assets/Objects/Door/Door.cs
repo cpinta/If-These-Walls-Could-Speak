@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Door : Interactable
 {
-    Animator animator;
+
+    protected Animator animator;
     protected bool isOpen = false;
-    bool initialLockState = false;
+    protected bool initialLockState = false;
     [SerializeField] protected bool locked = false;
-    [SerializeField] bool initiallyOpen = false;
+    [SerializeField] protected bool initiallyOpen = false;
 
     // Start is called before the first frame update
     protected void Start()

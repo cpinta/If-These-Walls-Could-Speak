@@ -13,7 +13,7 @@ public enum HidingState
     Exiting = 1,
 }
 
-public abstract class Entity : MonoBehaviour, IEntity
+public abstract class Entity : MonoBehaviour
 {
     public string Name;
     public bool moveCamera = false;
@@ -32,6 +32,7 @@ public abstract class Entity : MonoBehaviour, IEntity
     protected int targetMask = 0;
     protected int obstructionMask = 0;
     protected bool canSeeTarget = false;
+    protected bool forcedToHide = false;
     public List<Collectable> collectables = new List<Collectable>();
     public Collectable currentCollectable;
 
@@ -60,7 +61,7 @@ public abstract class Entity : MonoBehaviour, IEntity
         }
     }
 
-    public virtual void Hide(HidingSpot spot, bool hiding)
+    public virtual void Hide(HidingSpot spot, bool hiding, bool forced)
     {
         if(canInteract && canMoveBody && canMoveCamera)
         {
@@ -72,6 +73,7 @@ public abstract class Entity : MonoBehaviour, IEntity
             preHidePosition = transform.position;
             canInteract = !hiding;
             canMoveBody = false;
+            forcedToHide = forced;
             if(spot.syncRotation)
             {
                 canMoveCamera = false;

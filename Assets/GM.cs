@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
@@ -63,6 +64,8 @@ public class GM : MonoBehaviour
 
     [SerializeField] GameObject phase2Colliders;
     [SerializeField] Light[] lights;
+
+    [SerializeField] Sledgehammer sledgehammer;
 
 
     bool despawningGrandma = false;
@@ -270,5 +273,24 @@ public class GM : MonoBehaviour
             lights[i].enabled = true;
 
         }
+    }
+
+
+
+
+    public void OutroTapePlaying(CameraSpot cameraSpot)
+    {
+        player.Hide(cameraSpot, false, true);
+    }
+
+    public void OutroTapeDone()
+    {
+        player.StartExitingHide();
+        sledgehammer.Fall();
+    }
+
+    public void EndGame()
+    {
+        SceneManager.LoadScene("End", LoadSceneMode.Single);
     }
 }

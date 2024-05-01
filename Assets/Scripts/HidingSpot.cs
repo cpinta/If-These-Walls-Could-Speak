@@ -32,7 +32,7 @@ public class HidingSpot : Interactable
         Debug.Log("Hiding: "+name);
         usedToHide = true;
         collider.enabled = false;
-        entity.Hide(this, true);
+        entity.Hide(this, true, false);
     }
 
     public virtual void UnHide()

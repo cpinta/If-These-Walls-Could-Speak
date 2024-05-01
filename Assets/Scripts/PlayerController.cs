@@ -152,7 +152,10 @@ public class PlayerController : Entity
                 {
                     if (movementVector != Vector2.zero)
                     {
-                        hidingState = HidingState.Exiting;
+                        if (!forcedToHide)
+                        {
+                            hidingState = HidingState.Exiting;
+                        }
                     }
                 }
             }
@@ -223,6 +226,11 @@ public class PlayerController : Entity
                 centerText.rectTransform.localPosition = MouseScreenPosition() + (Vector3.up * yMousePromptOffset);
             }
         }
+    }
+
+    public void StartExitingHide()
+    {
+        hidingState = HidingState.Exiting;
     }
 
     Vector3 MouseScreenPosition()
@@ -362,9 +370,9 @@ public class PlayerController : Entity
         }
     }
 
-    public override void Hide(HidingSpot spot, bool isHiding)
+    public override void Hide(HidingSpot spot, bool isHiding, bool forced)
     {
-        base.Hide(spot, isHiding);
+        base.Hide(spot, isHiding, forced);
         rb.isKinematic = true;
         col.enabled = false;
         canMoveCamera = !spot.lockCamera;

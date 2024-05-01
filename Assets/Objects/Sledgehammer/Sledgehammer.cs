@@ -23,12 +23,19 @@ public class Sledgehammer : Collectable
     // Update is called once per frame
     void Update()
     {
-        base.Update();
+        //base.Update();
+        if (beingManipulated)
+        {
+            transform.localPosition = handPosition;
+            transform.localRotation = Quaternion.Euler(handRotation);
+            beingManipulated = false;
+        }
     }
 
     public override void Equip(Entity entity)
     {
         holder = entity;
+        animator.SetBool("InHand", true);
     }
 
     public override void IsHovering(bool isHovering, Entity entity)
@@ -75,6 +82,25 @@ public class Sledgehammer : Collectable
             {
                 chain.Break();
             }
+
+            ChainInteract chainInt;
+            if (other.TryGetComponent<ChainInteract>(out chainInt))
+            {
+                chainInt.Break();
+            }
         }
+    }
+
+    public void Fall()
+    {
+        animator.SetBool("Fall", true);
+    }
+
+    public override void ResetGame()
+    {
+        base.ResetGame();
+
+        animator.SetBool("InHand", false);
+        animator.SetBool("Fall", false);
     }
 }

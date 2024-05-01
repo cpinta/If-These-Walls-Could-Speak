@@ -34,4 +34,9 @@ public class ChainInteract : Interactable
     {
         
     }
+
+    public void Break()
+    {
+        this.GetComponentInParent<Chain>().Break();
+    }
 }
