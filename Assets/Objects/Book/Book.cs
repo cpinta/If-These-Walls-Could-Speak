@@ -108,11 +108,11 @@ public class Book : Collectable
 
     public override void ResetGame()
     {
-        //base.ResetGame();
-        //isOpen = false;
-        //animator.SetBool("Open", false);
-        //collider.enabled = false;
-        //transform.parent = parent;
+        base.ResetGame();
+        isOpen = false;
+        animator.SetBool("Open", false);
+        collider.enabled = false;
+        transform.parent = parent;
     }
 
     public void EnableGrabbing()

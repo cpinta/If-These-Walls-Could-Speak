@@ -69,7 +69,6 @@ public class GM : MonoBehaviour
 
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] Camera playerGrabCamera;
-    [SerializeField] Light playerGrabLight;
 
     [SerializeField] OneTimeAudio[] oneTimeAudios;
 
@@ -97,7 +96,6 @@ public class GM : MonoBehaviour
         StartGame();
         LoadPhase1();
         oneTimeAudios = FindObjectsByType<OneTimeAudio>(FindObjectsSortMode.None);
-        playerGrabLight.gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update
@@ -127,7 +125,6 @@ public class GM : MonoBehaviour
     {
         cutsceneManager.PlayCutscene(scenePlayerGrabbed);
         Cursor.lockState = CursorLockMode.None;
-        playerGrabLight.gameObject.SetActive(true);
     }
 
     public void MakePlayerSpeak(AudioClip clip)
@@ -206,7 +203,6 @@ public class GM : MonoBehaviour
     public void RespawnPlayer()
     {
         playerGrabCamera.gameObject.SetActive(false);
-        playerGrabLight.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         cutsceneManager.StopCutscene();
         gameOverScreen.SetActive(false);

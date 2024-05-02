@@ -88,17 +88,17 @@ public class Plate : Collectable
 
     public override void ResetGame()
     {
-        //base.ResetGame();
-        //if(isStack)
-        //{
-        //    for(int i = 0; i < plateStack.Count; i++)
-        //    {
-        //        plateStack[i].transform.parent = null;
-        //        plateStack[i].ResetGame();
-        //    }
-        //    plateStack.Clear();
-        //    isStack = false;
-        //}
+        base.ResetGame();
+        if(isStack)
+        {
+            for(int i = 0; i < plateStack.Count; i++)
+            {
+                plateStack[i].transform.parent = null;
+                plateStack[i].ResetGame();
+            }
+            plateStack.Clear();
+            isStack = false;
+        }
     }
 
     public override void Use(Entity entity, bool isDown)

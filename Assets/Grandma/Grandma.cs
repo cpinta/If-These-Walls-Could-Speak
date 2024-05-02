@@ -55,8 +55,8 @@ public class Grandma : Entity
     float wanderingOutOfSightTime = 10;
     float wanderingOutOfSightTimer = 0;
 
-    float nextSpawnTimeMin = 1;
-    float nextSpawnTimeMax = 3;
+    float nextSpawnTimeMin = 10;
+    float nextSpawnTimeMax = 30;
     float nextSpawnTimer = 0;
 
     float grabbingDistance = 1f;
