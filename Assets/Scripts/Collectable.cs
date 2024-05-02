@@ -8,6 +8,7 @@ public abstract class Collectable : Interactable
     public bool beingManipulated = false;
     public float collectionLerp = 10;
 
+    public Entity entityHeldBy;
 
     public Vector3 handRotation = Vector3.zero;
     public Vector3 handPosition = Vector3.zero;
@@ -90,6 +91,7 @@ public abstract class Collectable : Interactable
         this.gameObject.tag = "Untagged";
         collider.enabled = false;
         HandDestination(entity.hand);
+        entityHeldBy = entity;
         return true;
     }
 

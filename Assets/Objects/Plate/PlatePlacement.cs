@@ -56,7 +56,10 @@ public class PlatePlacement : Interactable
             }
             else //if the player doesn't have any plates
             {
-                entity.Collect(currentPlate);
+                if(!(entity.currentCollectable is Book))
+                {
+                    entity.Collect(currentPlate);
+                }
             }
             currentPlate = null;
         }
@@ -87,7 +90,7 @@ public class PlatePlacement : Interactable
         if(currentPlate != null)
         {
             currentPlate.transform.parent = null;
-            currentPlate.ResetGame();
+            //currentPlate.ResetGame();
             currentPlate = null;
         }
     }

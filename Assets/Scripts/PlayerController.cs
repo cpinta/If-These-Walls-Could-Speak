@@ -20,8 +20,10 @@ public class PlayerController : Entity
     [SerializeField] public Light pointLight;
     bool flashlightPickedUp = false;
     AudioSource audioSource;
+    PlayerInput playerInput;
 
     Vector2 movementVector = Vector2.zero;
+    Vector2 lookVector = Vector2.zero;
     //Camera Variables
     [SerializeField][Range(0.0f, 0.5f)] float mouseSmoothTime = 0.03f;
     [SerializeField] float mouseSensitivity = 6;
@@ -66,6 +68,7 @@ public class PlayerController : Entity
         rb = GetComponent<Rigidbody>();
         col = GetComponent<CapsuleCollider>();
         audioSource = GetComponent<AudioSource>();
+        playerInput = GetComponent<PlayerInput>();
         Cursor.lockState = CursorLockMode.Locked;
         GetComponent<MeshRenderer>().enabled = false;
         crouchedStandDiff = basePlayerHeight - crouchedPlayerHeight;
@@ -165,6 +168,7 @@ public class PlayerController : Entity
             isHiding = false;
         }
 
+
         Vector2 targetMouseDelta = Mouse.current.delta.ReadValue() * Time.smoothDeltaTime;
         currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
         camWasMovedLastUpdate = currentMouseDelta != Vector2.zero;
@@ -190,7 +194,7 @@ public class PlayerController : Entity
                 }
                 else
                 {
-                    CrouchRaycast();
+                    //CrouchRaycast();
                 }
 
                 if (isJaunting)
@@ -434,6 +438,11 @@ public class PlayerController : Entity
     public void Movement(InputAction.CallbackContext context)
     {
         movementVector = context.ReadValue<Vector2>();
+    }
+
+    public void Look(InputAction.CallbackContext context)
+    {
+        lookVector = context.ReadValue<Vector2>();
     }
 
     public void Interact(InputAction.CallbackContext context)

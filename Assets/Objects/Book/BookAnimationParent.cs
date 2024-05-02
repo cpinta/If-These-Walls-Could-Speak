@@ -45,7 +45,7 @@ public class BookAnimationParent : MonoBehaviour
 
     public void ResetGame()
     {
-        activated = true;
+        activated = false;
         collider.enabled = true;
         animator.enabled = true;
     }
