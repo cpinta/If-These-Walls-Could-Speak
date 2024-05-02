@@ -8,6 +8,4 @@ It was a lot of fun and I'm hoping to polish this up a little bit in the future 
 
 
 ### Known Bugs
-- Crouch is way too low
-- You can crouch then hide and clip under the map
 - Grandma can have errors and get stuck in place
